@@ -1,0 +1,18 @@
+consider adding prometheus instrumentation to enable monitoring channels
+watch https://www.youtube.com/watch?v=HkEZ1LJ7kzQ
+
+accept params either positionally or by name (--date=1/1/2017)
+print help on targets showing name and params
+
+print args, target and params... particularly any date params!
+also # workers, page-size, output-path
+print percent complete in prefetch mode
+print rate (#rows per minute)
+fancy single-line output
+summary: 100000 rows in 59 seconds
+
+split large output files
+- by number of lines
+- by day
+- by id
+- by size
