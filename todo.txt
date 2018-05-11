@@ -4,7 +4,8 @@ watch https://www.youtube.com/watch?v=HkEZ1LJ7kzQ
 accept params either positionally or by name (--date=1/1/2017)
 print help on targets showing name and params
 
-print args, target and params... particularly any date params!
+print args, target and params
+date params should be fully expanded
 also # workers, page-size, output-path
 print percent complete in prefetch mode
 print rate (#rows per minute)
@@ -16,3 +17,18 @@ split large output files
 - by day
 - by id
 - by size
+
+
+change m from months to minutes, and M to months
+
+change type field to match BigQuery types (i.e. INTEGER, FLOAT, TIMESTAMP, etc.)
+consider adding a --limit option for prefetch that limits the number of prefetched ids for testing
+
+consider resumable prefetches
+
+debug nest using sales
+
+option to dump errored queries to a log file
+allowed number of abandons before aborting
+
+only retry timeout errors

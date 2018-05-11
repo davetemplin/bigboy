@@ -9,7 +9,7 @@ GOTO error
 SETLOCAL
 SET GOOS=windows
 SET GOARCH=amd64
-go build
+go build -o bin/windows/bigboy.exe
 ENDLOCAL
 GOTO end
 
@@ -17,7 +17,7 @@ GOTO end
 SETLOCAL
 SET GOOS=linux
 SET GOARCH=amd64
-go build
+go build -o bin/linux/bigboy
 ENDLOCAL
 GOTO end
 
@@ -25,7 +25,7 @@ GOTO end
 SETLOCAL
 SET GOOS=darwin
 SET GOARCH=amd64
-go build
+go build -o bin/mac/bigboy
 ENDLOCAL
 GOTO end
 

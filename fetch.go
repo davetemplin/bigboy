@@ -56,7 +56,7 @@ func prefetchToFile(target *Target) (string, int) {
 	check(err)
 	defer rows.Close()
 
-	file, err := ioutil.TempFile("", "bigboy_")
+	file, err := ioutil.TempFile("", "bigboy-")
 	check(err)
 	defer file.Close()
 

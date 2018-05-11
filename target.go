@@ -171,13 +171,13 @@ func resolveTargetParam(text string, param Param, location *time.Location, i int
 func resolveTargetNest(target *Target) {
 	var err error
 	if target.Nest != nil {
-		if len(target.Fetch) == 1 && target.Nest[0].Fetch == "" {
+		if len(target.Nest) > 0 && target.Nest[0].Fetch == "" {
 			target.Nest[0].Fetch = "nest.sql"
 		}
 
 		for i, nest := range target.Nest {
 			if nest.Fetch == "" {
-				stop(fmt.Sprintf("Unspecified query for nest #", i + 1), 1)
+				stop(fmt.Sprintf("Unspecified query for nest #%d", i + 1), 1)
 			}
 
 			name := path.Join(args.target, nest.Fetch)
