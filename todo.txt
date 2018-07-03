@@ -1,3 +1,9 @@
+show percent complete for "xxx rows written" message in prefetch mode
+
+add troubleshooting section
+For prefetch, do the params defined in `target.json` match the params expected by the query in `prefetch.sql`?
+For non-prefetch, do the params defined in `target.json` match the params expected by the query in `extract.sql`?
+
 consider adding prometheus instrumentation to enable monitoring channels
 watch https://www.youtube.com/watch?v=HkEZ1LJ7kzQ
 
