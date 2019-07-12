@@ -5,8 +5,8 @@ Written by Dave Templin
 
 # Overview
 Bigboy is basically a **SQL-TO-JSON** tool that extracts data from SQL Server, PostgreSQL, or MySQL databases.
-It is designed to handle extremely high data extraction rates by running multiple concurrent queries.
-The tool provides a simple configuration model for managing any number of extractions.
+It is designed to handle extremely high data extraction rates (multi-million rows / gigabyte-range) which is achieved by running multiple concurrent extraction queries from a configurable thread pool.
+The tool provides a simple configuration model for managing any number of data extractions.
 It also exposes a simple and minimal command-line interface (CLI) that works great for adhoc or batch/cron use-cases.
 
 ## Features
@@ -31,8 +31,7 @@ fetch, prefetch
 
 ## Transforms
 nest, script, split, timezone
-_ for value only nesting
-
+special field names: _parent, _value
 
 
 # Reference
@@ -127,7 +126,7 @@ The following examples assume there is a target named `log` with a single paramt
 | `bigboy log 2017-07-21`               | 7/21/2017 at midnight GMT
 | `bigboy log "2017-07-21 15:00:00"`    | 7/21/2017 at 3pm GMT
 | `bigboy log today`                    | Midnight GMT of the current day
-| `bigboy log yesterday`                |   Midnight GMT of the previous day
+| `bigboy log yesterday`                | Midnight GMT of the previous day
 
 The following examples assume there is a target named `sales` with two paramters of type `date` representing a date range for the extraction.
 
@@ -137,7 +136,7 @@ The following examples assume there is a target named `sales` with two paramters
 | `bigboy sales 2017-07-21 2d`          | Midnight GMT of the previous day.
 
 
-> The time zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory or uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
+> The time-zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory for an uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
 
 
 
