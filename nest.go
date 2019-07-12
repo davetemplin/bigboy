@@ -25,9 +25,13 @@ func queryNest(db *sql.DB, nest *Nest, list []map[string]interface{}) error {
 		slice := make([]interface{}, 0)
 		for _, child := range children {
 			if val, ok := child["_parent"]; ok {
-				if val.(int64) == parent[nest.ParentKey].(int64) {
+				if to_uint64(val) == to_uint64(parent[nest.ParentKey]) {
 					delete(child, "_parent")
-					slice = append(slice, child)
+					if _, ok := child["_"]; ok {
+						slice = append(slice, child["_"])
+					} else {
+						slice = append(slice, child)
+					}
 				}
 			}
 		}

@@ -1,24 +1,24 @@
 # Bigboy
-Extract data from SQL Server, PostgreSQL, or MySQL, transforming SQL-to-JSON or JSON-to-JSON.
+High data-rate SQL-to-JSON extraction from SQL Server, PostgreSQL, or MySQL.
 
 Written by Dave Templin
 
 # Overview
-Bigboy is a tool that extracts data from SQL Server, PostgreSQL, or MySQL databases and transforms SQL-to-JSON or JSON-to-JSON; basically performing the **E** and the **T** part of **ETL** *(Extract/Transform/Load)*. The tool provides a simple model for configuring SQL extraction queries and optionally Javascript functions for transformations. A simple but powerful command-line interface (CLI) makes it easy to perform both adhoc and batch processing scenarios (BASH, CRON, etc.). The tool is also designed to maximize available local compute resources to extract and transform massive data volumes in a time-efficient way.
+Bigboy is basically a **SQL-TO-JSON** tool that extracts data from SQL Server, PostgreSQL, or MySQL databases.
+It is designed to handle extremely high data extraction rates by running multiple concurrent queries.
+The tool provides a simple configuration model for managing any number of extractions.
+It also exposes a simple and minimal command-line interface (CLI) that works great for adhoc or batch/cron use-cases.
 
 ## Features
 * Extract data from SQL Server, PostgreSQL, or MySQL
-* Perform SQL-to-JSON or JSON-to-JSON transformations
+* Perform simple SQL-to-JSON transformations
 * Nest rows to form complex hierarchical (or document-oriented) data
-* Leverage Javascript functions to perform arbitrarily complex data transformations
-* Define command driven parameters to create dynamic queries and scripts
+* Define configuration parameters to manage dynamic queries
+* Run queries in parallel from a configurable thread pool for high data rates
 * Combine data from multiple different database sources
 * Apply timezone to dates stored without a timezone
-* Configure the tool to maximize local compute resources and minimize processing time
 
 ## Quickstart
-
-
 
 # Concepts
 
@@ -31,6 +31,7 @@ fetch, prefetch
 
 ## Transforms
 nest, script, split, timezone
+_ for value only nesting
 
 
 
@@ -148,6 +149,7 @@ Install [golang](https://golang.org/dl/)
 $ go get github.com/denisenkom/go-mssqldb
 $ go get github.com/lib/pq
 $ go get github.com/go-sql-driver/mysql
+$ go get golang.org/x/crypto/md4 # required if cross building from windows
 $ git clone https://github.com/davetemplin/bigboy.git
 $ go build
 ```
@@ -158,7 +160,6 @@ $ build windows
 $ build linux
 $ build mac
 ```
-
 
 
 # References

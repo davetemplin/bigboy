@@ -10,6 +10,7 @@ SETLOCAL
 SET GOOS=windows
 SET GOARCH=amd64
 go build -o bin/windows/bigboy.exe
+COPY /Y %GOROOT%\lib\time\zoneinfo.zip bin\windows\
 ENDLOCAL
 GOTO end
 

@@ -48,10 +48,37 @@ func jsonWriteln(file *os.File, obj map[string]interface{}) error {
 	return nil
 }
 
+func to_uint64(value interface{}) uint64 {
+	switch value.(type) {
+		case int:
+			return uint64(value.(int))
+		case int8:
+			return uint64(value.(int8))
+		case int16:
+			return uint64(value.(int16))
+		case int32:
+			return uint64(value.(int32))
+		case int64:
+			return uint64(value.(int64))
+		case uint:
+			return uint64(value.(uint))
+		case uint8:
+			return uint64(value.(uint8))
+		case uint16:
+			return uint64(value.(uint16))
+		case uint32:
+			return uint64(value.(uint32))
+		case uint64:
+			return uint64(value.(uint64))
+		default:
+			panic("cannot convert value to uint64")
+	}
+}
+
 func take(list []map[string]interface{}, key string) []uint64 {
 	result := make([]uint64, 0)
 	for _, obj := range list {
-		result = append(result, obj[key].(uint64))
+		result = append(result, to_uint64(obj[key]))
 	}
 	return result
 }
