@@ -22,7 +22,7 @@ func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) 
 	t := time.Now()
 	var name string
 	if args.out == "" {
-		name = path.Join("out", args.target, day(t) + ".json")
+		name = path.Join("out", args.target, day(t)+".json")
 	} else {
 		name = args.out
 	}
@@ -42,7 +42,7 @@ func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) 
 		}
 		rows += len(data)
 		if !args.quiet {
-			fmt.Printf("%d rows written\n", rows)
+			fmt.Printf("%d rows written\r", rows)
 		}
 	}
 
@@ -62,7 +62,7 @@ func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}
 
 	err := os.MkdirAll(path.Dir(dir), 0777)
 	check(err)
-	
+
 	s := newSplitter(target, dir)
 	rows := 0
 	for data := range transformChannel {
@@ -80,5 +80,5 @@ func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}
 
 	if !args.quiet {
 		fmt.Printf("%d rows written to %d files in %d seconds\n", rows, len(s.files), int(time.Since(t).Seconds()))
-	}	
+	}
 }
