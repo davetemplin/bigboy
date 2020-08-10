@@ -3,30 +3,29 @@ package main
 import (
 	"flag"
 	"fmt"
+	_ "net/http/pprof"
 	"os"
 	"sync"
 	"time"
-	_ "net/http/pprof"
 )
 
 var args struct {
-	errors uint64
-	nulls bool
-	out string
-	page int
-	params []string
-	path string
-	quiet bool
+	errors  uint64
+	nulls   bool
+	out     string
+	page    int
+	params  []string
+	path    string
+	quiet   bool
 	retries uint64
-	target string
+	target  string
 	version bool
 	workers int
 }
 var errors uint64
 
-
 func main() {
-	loadConfig()
+	loadConfig("config.json")
 	parseArgs()
 
 	t := time.Now()
@@ -35,8 +34,8 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func(target *Target) {
-		extractChannel := make(chan []map[string]interface{}, args.page * args.workers * 10)
-		transformChannel := make(chan []map[string]interface{}, args.page * args.workers * 10)
+		extractChannel := make(chan []map[string]interface{}, args.page*args.workers*10)
+		transformChannel := make(chan []map[string]interface{}, args.page*args.workers*10)
 		go extract(target, extractChannel)
 		go transform(target, extractChannel, transformChannel)
 		go write(target, transformChannel, &wg)
@@ -71,7 +70,7 @@ func parseArgs() {
 	}
 
 	args.target = flag.Args()[0]
-	args.params = flag.Args()[1:len(flag.Args())]	
+	args.params = flag.Args()[1:len(flag.Args())]
 }
 
 func usage() {

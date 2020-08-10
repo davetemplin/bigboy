@@ -13,17 +13,17 @@ import (
 const dbTimeLayout = "2006-01-02 15:04:05.000"
 
 func check(err error) {
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 }
 
 func warn(message string) {
-	fmt.Fprintf(os.Stderr, message + "\n")
+	fmt.Fprintf(os.Stderr, message+"\n")
 }
 
 func stop(message string, code int) {
-	fmt.Fprintf(os.Stderr, message + "\n")
+	fmt.Fprintf(os.Stderr, message+"\n")
 	os.Exit(code)
 }
 
@@ -50,28 +50,28 @@ func jsonWriteln(file *os.File, obj map[string]interface{}) error {
 
 func to_uint64(value interface{}) uint64 {
 	switch value.(type) {
-		case int:
-			return uint64(value.(int))
-		case int8:
-			return uint64(value.(int8))
-		case int16:
-			return uint64(value.(int16))
-		case int32:
-			return uint64(value.(int32))
-		case int64:
-			return uint64(value.(int64))
-		case uint:
-			return uint64(value.(uint))
-		case uint8:
-			return uint64(value.(uint8))
-		case uint16:
-			return uint64(value.(uint16))
-		case uint32:
-			return uint64(value.(uint32))
-		case uint64:
-			return uint64(value.(uint64))
-		default:
-			panic("cannot convert value to uint64")
+	case int:
+		return uint64(value.(int))
+	case int8:
+		return uint64(value.(int8))
+	case int16:
+		return uint64(value.(int16))
+	case int32:
+		return uint64(value.(int32))
+	case int64:
+		return uint64(value.(int64))
+	case uint:
+		return uint64(value.(uint))
+	case uint8:
+		return uint64(value.(uint8))
+	case uint16:
+		return uint64(value.(uint16))
+	case uint32:
+		return uint64(value.(uint32))
+	case uint64:
+		return uint64(value.(uint64))
+	default:
+		panic("cannot convert value to uint64")
 	}
 }
 
@@ -145,7 +145,7 @@ func parseTime(text string) (time.Time, error) {
 	if err == nil {
 		return t, err
 	}
-	
+
 	t, err = parseRelativeTime(text, time.Now())
 	return t, err
 }
@@ -169,13 +169,13 @@ func parseRelativeTime(text string, t time.Time) (time.Time, error) {
 
 	if strings.HasSuffix(s, "d") {
 		n, err := strconv.Atoi(strings.TrimSuffix(s, "d"))
-		return t.AddDate(0, 0, u * n), err
+		return t.AddDate(0, 0, u*n), err
 	} else if strings.HasSuffix(s, "m") {
 		n, err := strconv.Atoi(strings.TrimSuffix(s, "m"))
-		return t.AddDate(0, u * n, 0), err
+		return t.AddDate(0, u*n, 0), err
 	} else if strings.HasSuffix(s, "y") {
 		n, err := strconv.Atoi(strings.TrimSuffix(s, "y"))
-		return t.AddDate(u * n, 0, 0), err
+		return t.AddDate(u*n, 0, 0), err
 	}
 
 	duration, err := time.ParseDuration(text)
@@ -202,12 +202,12 @@ func day(t time.Time) string {
 }
 
 func contains(list []string, value string) bool {
-    for _, item := range list {
-        if item == value {
-            return true
-        }
-    }
-    return false
+	for _, item := range list {
+		if item == value {
+			return true
+		}
+	}
+	return false
 }
 
 func fileExists(name string) bool {

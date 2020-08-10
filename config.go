@@ -7,25 +7,25 @@ import (
 
 // Config ...
 type Config struct {
-	Connections  map[string]*Connection  `json:"connections"`
-	Errors       uint64                  `json:"errors"`
-	Nulls        bool                    `json:"nulls"`
-	Page         int                     `json:"page"`
-	Quiet        bool                    `json:"quiet"`
-	Retries      uint64                  `json:"retries"`
-	Workers      int                     `json:"workers"`
+	Connections map[string]*Connection `json:"connections"`
+	Errors      uint64                 `json:"errors"`
+	Nulls       bool                   `json:"nulls"`
+	Page        int                    `json:"page"`
+	Quiet       bool                   `json:"quiet"`
+	Retries     uint64                 `json:"retries"`
+	Workers     int                    `json:"workers"`
 }
 
 var config Config
+
 const undefined = ^uint64(0)
 
-func loadConfig() {
+func loadConfig(path string) {
 	config.Errors = undefined
 	config.Retries = undefined
 
-	name := "config.json"
-	if fileExists(name) {
-		buffer, err := ioutil.ReadFile(name)
+	if fileExists(path) {
+		buffer, err := ioutil.ReadFile(path)
 		check(err)
 		json.Unmarshal(buffer, &config)
 	}
