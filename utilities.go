@@ -211,9 +211,9 @@ func contains(list []string, value string) bool {
 }
 
 func fileExists(name string) bool {
-	_, err := os.Stat(name)
+	path, err := os.Stat(name)
 	if err == nil {
-		return true
+		return !path.IsDir()
 	} else if os.IsNotExist(err) {
 		return false
 	}
