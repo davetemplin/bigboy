@@ -6,44 +6,39 @@ import (
 )
 
 func TestFileExists(t *testing.T) {
-	expected := true
 	actual := fileExists("README.md")
 
-	assert.Equal(t, expected, actual, "Returns true")
+	assert.True(t, actual, "Checks if file exists")
 }
 
 func TestFileExistsAcceptsSubDirectories(t *testing.T) {
-	expected := true
 	actual := fileExists(".vscode/launch.json")
 
-	assert.Equal(t, expected, actual, "Accepts Subdirectories")
+	assert.True(t, actual, "Accepts Subdirectories")
 }
 
 func TestFileExistsNotExist(t *testing.T) {
-	expected := false
 	actual := fileExists("NOT_EXIST")
 
-	assert.Equal(t, expected, actual, "Returns false")
+	assert.False(t, actual, "Returns false")
 }
 
 func TestFileExistsIgnoresDirectories(t *testing.T) {
-	expected := false
 	actual := fileExists(".vscode")
 
-	assert.Equal(t, expected, actual, "Ignores Directories")
+	assert.False(t, actual, "Ignores Directories")
 }
 
 func TestFileExistsThrowsError(t *testing.T) {
 	notDir := "LICENSE/NOT_EXIST"
-	expected := true
 
-	var actual bool
+	actual := true
 	defer func() {
 		if err := recover(); err != nil {
-			actual = true
+			actual = false
 		}
 
-		assert.Equal(t, expected, actual, "Throws Error")
+		assert.False(t, actual, "Throws Error")
 	}()
 
 	fileExists(notDir)
