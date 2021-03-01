@@ -34,12 +34,12 @@ func TestLoadConfigMissing(t *testing.T) {
 	loadConfig(configPath)
 
 	assert.Equal(t, config.Connections, map[string]*Connection(map[string]*Connection(nil)), "Config Connections set")
-	assert.Equal(t, config.Errors, toUint64(100), "Config Errors set")
+	assert.Equal(t, config.Errors, toUint64(defaultErrors), "Config Errors set")
 	assert.Equal(t, config.Nulls, false, "Config Nulls set")
-	assert.Equal(t, config.Page, 1000, "Config Page set")
+	assert.Equal(t, config.Page, defaultPage, "Config Page set")
 	assert.Equal(t, config.Quiet, false, "Config Quiet set")
-	assert.Equal(t, config.Retries, toUint64(3), "Config Retries set")
-	assert.Equal(t, config.Workers, 4, "Config Workers set")
+	assert.Equal(t, config.Retries, toUint64(defaultRetries), "Config Retries set")
+	assert.Equal(t, config.Workers, defaultWorkers, "Config Workers set")
 }
 
 func TestLoadConfigEmpty(t *testing.T) {
@@ -49,12 +49,12 @@ func TestLoadConfigEmpty(t *testing.T) {
 	loadConfig(configPath)
 
 	assert.Equal(t, config.Connections, map[string]*Connection(map[string]*Connection(nil)), "Config Connections set")
-	assert.Equal(t, config.Errors, toUint64(100), "Config Errors set")
+	assert.Equal(t, config.Errors, toUint64(defaultErrors), "Config Errors set")
 	assert.Equal(t, config.Nulls, false, "Config Nulls set")
-	assert.Equal(t, config.Page, 1000, "Config Page set")
+	assert.Equal(t, config.Page, defaultPage, "Config Page set")
 	assert.Equal(t, config.Quiet, false, "Config Quiet set")
-	assert.Equal(t, config.Retries, toUint64(3), "Config Retries set")
-	assert.Equal(t, config.Workers, 4, "Config Workers set")
+	assert.Equal(t, config.Retries, toUint64(defaultRetries), "Config Retries set")
+	assert.Equal(t, config.Workers, defaultWorkers, "Config Workers set")
 
 	DeleteConfig(configPath)
 }
