@@ -12,44 +12,44 @@ import (
 
 // Target ...
 type Target struct {
-	Connection  string          `json:"connection"`
-	Fetch       string          `json:"fetch"`
-	Params      []Param         `json:"params"`
-	Prefetch    bool            `json:"prefetch"`
-	Nest        []*Nest         `json:"nest"`
-	Script      string          `json:"script"`
-	Split       *Split          `json:"split"`
-	Timezone    string          `json:"timezone"`
-	connection  *Connection
-	extract     string
-	prefetch    string
-	params      []interface{}
-	location    *time.Location
+	Connection string  `json:"connection"`
+	Fetch      string  `json:"fetch"`
+	Params     []Param `json:"params"`
+	Prefetch   bool    `json:"prefetch"`
+	Nest       []*Nest `json:"nest"`
+	Script     string  `json:"script"`
+	Split      *Split  `json:"split"`
+	Timezone   string  `json:"timezone"`
+	connection *Connection
+	extract    string
+	prefetch   string
+	params     []interface{}
+	location   *time.Location
 }
 
 // Nest ...
 type Nest struct {
-	ChildKey    string          `json:"childKey"`
-	Connection  string          `json:"connection"`
-	Fetch       string          `json:"fetch"`
-	ParentKey   string          `json:"parentKey"`
-	Timezone    string          `json:"timezone"`
-	connection  *Connection
-	fetch       string
-	location    *time.Location
+	ChildKey   string `json:"childKey"`
+	Connection string `json:"connection"`
+	Fetch      string `json:"fetch"`
+	ParentKey  string `json:"parentKey"`
+	Timezone   string `json:"timezone"`
+	connection *Connection
+	fetch      string
+	location   *time.Location
 }
 
 // Param ...
 type Param struct {
-	Name        string          `json:"name"`
-	Type        string          `json:"type"`
-	Default     string          `json:"default"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Default string `json:"default"`
 }
 
 // Split ...
 type Split struct {
-	By          string          `json:"by"`
-	Value       string          `json:"value"`
+	By    string `json:"by"`
+	Value string `json:"value"`
 }
 
 func loadTarget() *Target {
@@ -177,7 +177,7 @@ func resolveTargetNest(target *Target) {
 
 		for i, nest := range target.Nest {
 			if nest.Fetch == "" {
-				stop(fmt.Sprintf("Unspecified query for nest #%d", i + 1), 1)
+				stop(fmt.Sprintf("Unspecified query for nest #%d", i+1), 1)
 			}
 
 			name := path.Join(args.target, nest.Fetch)
