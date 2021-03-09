@@ -7,6 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func getDefaultBool(priorityBool bool, fallbackBool bool) bool {
+	if !priorityBool {
+		return fallbackBool
+	}
+	return priorityBool
+}
+
 func getDefaultInt(priorityInt int, fallbackInt int) int {
 	if priorityInt == 0 {
 		return fallbackInt
@@ -31,8 +38,12 @@ func TestParseArgs(t *testing.T) {
 			Args{},
 			Config{}},
 
-		{[]string{"-n", "-o", "testOut.json", "-q"},
-			Args{nulls: true, out: "testOut.json", quiet: true},
+		{[]string{},
+			Args{},
+			Config{Errors: 555, Nulls: true, Quiet: true, Retries: 11, Workers: 12}},
+
+		{[]string{"-e", "1000", "-n", "-o", "testOut.json", "-p", "100", "-q", "-r", "7", "-v", "-w", "9"},
+			Args{errors: 1000, nulls: true, out: "testOut.json", page: 100, quiet: true, retries: 7, version: true, workers: 9},
 			Config{}},
 	}
 
@@ -42,17 +53,19 @@ func TestParseArgs(t *testing.T) {
 			assert.Equal(t, "", output, "No unparsed arguments")
 
 			expectedErrors := getDefaultUint64(tt.args.errors, tt.config.Errors)
+			expectedNulls := getDefaultBool(tt.args.nulls, tt.config.Nulls)
 			expectedPage := getDefaultInt(tt.args.page, tt.config.Page)
+			expectedQuiet := getDefaultBool(tt.args.quiet, tt.config.Quiet)
 			expectedRetries := getDefaultUint64(tt.args.retries, tt.config.Retries)
 			expectedWorkers := getDefaultInt(tt.args.workers, tt.config.Workers)
 
 			assert.Equal(t, expectedErrors, args.errors, "Args errors set")
-			assert.Equal(t, tt.args.nulls, args.nulls, "Args nulls set")
+			assert.Equal(t, expectedNulls, args.nulls, "Args nulls set")
 			assert.Equal(t, tt.args.out, args.out, "Args out set")
 			assert.Equal(t, expectedPage, args.page, "Args page set")
 			assert.Equal(t, tt.args.params, args.params, "Args params set")
 			assert.Equal(t, tt.args.path, args.path, "Args path set")
-			assert.Equal(t, tt.args.quiet, args.quiet, "Args quiet set")
+			assert.Equal(t, expectedQuiet, args.quiet, "Args quiet set")
 			assert.Equal(t, expectedRetries, args.retries, "Args retries set")
 			assert.Equal(t, tt.args.target, args.target, "Args target set")
 			assert.Equal(t, tt.args.version, args.version, "Args version set")
