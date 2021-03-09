@@ -17,20 +17,25 @@ type Config struct {
 	Workers     int                    `json:"workers"`
 }
 
-// Set default values
-var config = Config{
-	Errors:  defaultErrors,
-	Page:    defaultPage,
-	Retries: defaultRetries,
-	Workers: defaultWorkers,
+var config Config
+
+func getDefaultConfig() Config {
+	return Config{
+		Errors:  defaultErrors,
+		Page:    defaultPage,
+		Retries: defaultRetries,
+		Workers: defaultWorkers,
+	}
 }
 
-func loadConfig(path string) {
+func loadConfig(path string) Config {
+	var c Config = getDefaultConfig()
 	if fileExists(path) {
 		buffer, err := ioutil.ReadFile(path)
 		check(err)
-		json.Unmarshal(buffer, &config)
+		json.Unmarshal(buffer, &c)
 	} else {
 		fmt.Println("Using default configuration")
 	}
+	return c
 }

@@ -29,8 +29,8 @@ var args Args
 var errors uint64
 
 func main() {
-	loadConfig("config.json")
-	args, _ := parseArgs(os.Args[0], os.Args[1:])
+	config = loadConfig("config.json")
+	args, _ := parseArgs(os.Args[0], os.Args[1:], config)
 
 	if args.version {
 		stop(version, 0)
@@ -61,20 +61,20 @@ func main() {
 	}
 }
 
-func parseArgs(progname string, input []string) (args *Args, output string) {
+func parseArgs(progname string, input []string, c Config) (args *Args, output string) {
 	flags := flag.NewFlagSet(progname, flag.ContinueOnError)
 	var buf bytes.Buffer
 	flags.SetOutput(&buf)
 
 	var a Args
-	flags.Uint64Var(&a.errors, "e", config.Errors, "max errors allowed")
-	flags.BoolVar(&a.nulls, "n", config.Nulls, "Include nulls in output")
+	flags.Uint64Var(&a.errors, "e", c.Errors, "max errors allowed")
+	flags.BoolVar(&a.nulls, "n", c.Nulls, "Include nulls in output")
 	flags.StringVar(&a.out, "o", "", "Output file or directory")
-	flags.IntVar(&a.page, "p", config.Page, "Rows extracted per query")
-	flags.BoolVar(&a.quiet, "q", config.Quiet, "Supress informational output")
-	flags.Uint64Var(&a.retries, "r", config.Retries, "max consecutive errors")
+	flags.IntVar(&a.page, "p", c.Page, "Rows extracted per query")
+	flags.BoolVar(&a.quiet, "q", c.Quiet, "Supress informational output")
+	flags.Uint64Var(&a.retries, "r", c.Retries, "max consecutive errors")
 	flags.BoolVar(&a.version, "v", false, "Print version info about bigboy and exit")
-	flags.IntVar(&a.workers, "w", config.Workers, "# of workers")
+	flags.IntVar(&a.workers, "w", c.Workers, "# of workers")
 	flags.Usage = usage
 
 	err := flags.Parse(input)

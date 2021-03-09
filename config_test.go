@@ -32,7 +32,7 @@ func DeleteConfig(path string) {
 
 func TestLoadConfigMissing(t *testing.T) {
 	configPath := "test_config.json"
-	loadConfig(configPath)
+	config := loadConfig(configPath)
 
 	assert.Equal(t, map[string]*Connection(map[string]*Connection(nil)), config.Connections, "Config Connections set")
 	assert.Equal(t, toUint64(defaultErrors), config.Errors, "Config Errors set")
@@ -47,7 +47,7 @@ func TestLoadConfigEmpty(t *testing.T) {
 	configPath := "test_config.json"
 	CreateConfig(configPath, "{}")
 
-	loadConfig(configPath)
+	config := loadConfig(configPath)
 
 	assert.Equal(t, map[string]*Connection(map[string]*Connection(nil)), config.Connections, "Config Connections set")
 	assert.Equal(t, toUint64(defaultErrors), config.Errors, "Config Errors set")
@@ -75,7 +75,7 @@ func TestLoadConfigOverride(t *testing.T) {
 
 	CreateConfig(configPath, string(json))
 
-	loadConfig(configPath)
+	config := loadConfig(configPath)
 
 	assert.Equal(t, map[string]*Connection(map[string]*Connection(nil)), config.Connections, "Config Connections set")
 	assert.Equal(t, (*testConfig).Errors, config.Errors, "Config Errors set")
