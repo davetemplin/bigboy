@@ -12,12 +12,12 @@ import (
 
 // Args - Command Line Arguments
 type Args struct {
+	config  string
 	errors  uint64
 	nulls   bool
 	out     string
 	page    int
 	params  []string
-	path    string
 	quiet   bool
 	retries uint64
 	target  string
@@ -67,6 +67,7 @@ func parseArgs(progname string, input []string, c Config) (args *Args, output st
 	flags.SetOutput(&buf)
 
 	var a Args
+	flags.StringVar(&a.config, "c", defaultConfig, "Bigboy conifg file path")
 	flags.Uint64Var(&a.errors, "e", c.Errors, "max errors allowed")
 	flags.BoolVar(&a.nulls, "n", c.Nulls, "Include nulls in output")
 	flags.StringVar(&a.out, "o", "", "Output file or directory")

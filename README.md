@@ -43,6 +43,7 @@ special field names: _parent, _value
 
 ## Command Arguments
 
+* `-c` Bigboy config file path *(default=\"bigboy.json\")*
 * `-e` Maximum overall number of errors before aborting *(default=100)*
 * `-n` Include nulls in output *(default=false)*
 * `-o` Output directory *(creates \"out\" directory if not specified)*
@@ -52,7 +53,7 @@ special field names: _parent, _value
 * `-v` Print version info about bigboy and exit
 * `-w` Number of background workers *(default=4)*
 
-> Above defaults can also be configured in the `bigboy.json` file.
+> Above flags take priority over the configuration in `bigboy.json` file.
 
 ## bigboy.json
 
@@ -63,6 +64,7 @@ This section describes the `bigboy.json` file format.
 | `connections` | ... |
 | `errors` | ... |
 | `nulls` | ... |
+| `config` | ... |
 | `page` | ... |
 | `quiet` | ... |
 | `retries` | ... |
