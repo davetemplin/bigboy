@@ -54,12 +54,8 @@ func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) 
 
 func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}) {
 	t := time.Now()
-	var dir string
-	if args.out == "" {
-		dir = path.Join("out", args.target)
-	} else {
-		dir = path.Join("out", args.target)
-	}
+
+	var dir string = path.Join(defaultOutputDir, args.target)
 
 	err := os.MkdirAll(path.Dir(dir), 0777)
 	check(err)
@@ -74,7 +70,7 @@ func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}
 		}
 		rows += len(data)
 		if !args.quiet {
-			fmt.Printf("%d rows written, %d files\n", rows, len(s.files))
+			fmt.Printf("%d rows written, %d files\r", rows, len(s.files))
 		}
 	}
 	s.close()
