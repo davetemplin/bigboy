@@ -20,9 +20,10 @@ func write(target *Target, transformChannel <-chan []map[string]interface{}, wg 
 
 func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) {
 	t := time.Now()
+
 	var name string
 	if args.out == "" {
-		name = path.Join("out", args.target, day(t)+".json")
+		name = path.Join(defaultOutputDir, args.target, day(t)+".json")
 	} else {
 		name = args.out
 	}
