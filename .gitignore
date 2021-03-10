@@ -11,7 +11,7 @@ debug
 *.test
 
 # Local setup for development
-/out/*
+out*
 bigboy.json
 extract.sql
 nest.sql

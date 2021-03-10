@@ -49,8 +49,7 @@ func TestParseArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(strings.Join(tt.input, " "), func(t *testing.T) {
-			args, output := parseArgs("bigboy", tt.input, tt.config)
-			assert.Equal(t, "", output, "No unparsed arguments")
+			args := *parseArgs("bigboy", tt.input, tt.config)
 
 			var expectedConfig string = defaultConfig
 			if tt.args.config != "" {

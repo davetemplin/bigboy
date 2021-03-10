@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	_ "net/http/pprof"
@@ -30,7 +29,7 @@ var errors uint64
 
 func main() {
 	config = loadConfig(defaultConfig)
-	args, _ := parseArgs(os.Args[0], os.Args[1:], config)
+	args = *parseArgs(os.Args[0], os.Args[1:], config)
 
 	if args.version {
 		stop(version, 0)
@@ -61,10 +60,10 @@ func main() {
 	}
 }
 
-func parseArgs(progname string, input []string, c Config) (args *Args, output string) {
-	flags := flag.NewFlagSet(progname, flag.ContinueOnError)
-	var buf bytes.Buffer
-	flags.SetOutput(&buf)
+var flags *flag.FlagSet
+
+func parseArgs(progname string, input []string, c Config) (args *Args) {
+	flags = flag.NewFlagSet(progname, flag.ContinueOnError)
 
 	var a Args
 	flags.StringVar(&a.config, "c", defaultConfig, "Bigboy conifg file path")
@@ -86,16 +85,16 @@ func parseArgs(progname string, input []string, c Config) (args *Args, output st
 
 	allArgs := flags.Args()
 	if len(allArgs) == 0 {
-		return &a, buf.String()
+		return &a
 	}
 
 	a.target = allArgs[0]
 	a.params = allArgs[1:]
-	return &a, buf.String()
+	return &a
 }
 
 func usage() {
 	fmt.Println("usage: bigboy [options] target [params]")
 	fmt.Println()
-	flag.PrintDefaults()
+	flags.PrintDefaults()
 }
