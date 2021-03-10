@@ -29,7 +29,7 @@ var args Args
 var errors uint64
 
 func main() {
-	config = loadConfig("config.json")
+	config = loadConfig(defaultConfig)
 	args, _ := parseArgs(os.Args[0], os.Args[1:], config)
 
 	if args.version {

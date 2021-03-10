@@ -53,7 +53,7 @@ type Split struct {
 }
 
 func loadTarget() *Target {
-	name := path.Join(args.target, "target.json")
+	name := path.Join(args.target, defaultTarget)
 	checkFileExists(name)
 
 	buffer, err := ioutil.ReadFile(name)
@@ -95,7 +95,7 @@ func applyTargetDefaultParams(target *Target) {
 func resolveTargetQuery(target *Target) {
 	var err error
 	if target.Fetch == "" {
-		target.Fetch = "extract.sql"
+		target.Fetch = defaultExtract
 	}
 	name := path.Join(args.target, target.Fetch)
 	checkFileExists(name)
@@ -105,7 +105,7 @@ func resolveTargetQuery(target *Target) {
 
 func resolveTargetConnection(target *Target) {
 	if target.Connection == "" {
-		target.Connection = "default"
+		target.Connection = defaultConnection
 	}
 	target.connection = connect(target.Connection)
 }
@@ -172,7 +172,7 @@ func resolveTargetNest(target *Target) {
 	var err error
 	if target.Nest != nil {
 		if len(target.Nest) > 0 && target.Nest[0].Fetch == "" {
-			target.Nest[0].Fetch = "nest.sql"
+			target.Nest[0].Fetch = defaultNest
 		}
 
 		for i, nest := range target.Nest {
@@ -204,7 +204,7 @@ func resolveTargetNest(target *Target) {
 func resolveTargetPrefetch(target *Target) {
 	var err error
 	if target.Prefetch {
-		name := path.Join(args.target, "prefetch.sql")
+		name := path.Join(args.target, defaultPrefetch)
 		checkFileExists(name)
 		target.prefetch, err = loadFile(name)
 		check(err)

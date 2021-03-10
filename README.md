@@ -52,11 +52,11 @@ special field names: _parent, _value
 * `-v` Print version info about bigboy and exit
 * `-w` Number of background workers *(default=4)*
 
-> Above defaults can also be configured in the `config.json` file.
+> Above defaults can also be configured in the `bigboy.json` file.
 
-## config.json
+## bigboy.json
 
-This section describes the `config.json` file format.
+This section describes the `bigboy.json` file format.
 
 | Name | Description |
 | --- | --- |
