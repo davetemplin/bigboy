@@ -21,17 +21,17 @@ func write(target *Target, transformChannel <-chan []map[string]interface{}, wg 
 func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) {
 	t := time.Now()
 
-	var name string
+	var fileName string
 	if args.out == "" {
-		name = path.Join(defaultOutputDir, args.target, day(t)+".json")
+		fileName = path.Join(defaultOutputDir, args.target, day(t)+".json")
 	} else {
-		name = args.out
+		fileName = args.out
 	}
 
-	err := os.MkdirAll(path.Dir(name), 0777)
+	err := os.MkdirAll(path.Dir(fileName), 0777)
 	check(err)
 
-	file, err := os.Create(name)
+	file, err := os.Create(fileName)
 	check(err)
 	defer file.Close()
 
@@ -55,7 +55,12 @@ func writeAll(target *Target, transformChannel <-chan []map[string]interface{}) 
 func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}) {
 	t := time.Now()
 
-	var dir string = path.Join(defaultOutputDir, args.target)
+	var dir string
+	if args.out == "" {
+		dir = path.Join(defaultOutputDir, args.target)
+	} else {
+		dir = path.Join(path.Dir(args.out), args.target)
+	}
 
 	err := os.MkdirAll(path.Dir(dir), 0777)
 	check(err)
