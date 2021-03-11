@@ -36,13 +36,13 @@ func main() {
 	var progname string = os.Args[0]
 	var input []string = os.Args[1:]
 
-	flags, usage := parseFlags(progname, input)
+	flags, usage := parseFlags(progname, input, &config)
 	if flags.version {
 		stop(version, 0)
 	}
 
 	config = *loadConfig(flags.config)
-	args = *parseArgs(progname, input)
+	args = *parseArgs(progname, input, &config)
 
 	if args.target == "" {
 		usage()
@@ -69,7 +69,7 @@ func main() {
 	}
 }
 
-func setArgs(flags *flag.FlagSet, c *Config, f *Flags) {
+func setFlags(flags *flag.FlagSet, c *Config, f *Flags) {
 	flags.StringVar(&f.config, "c", defaultConfig, "Bigboy conifg file path")
 	flags.Uint64Var(&f.errors, "e", c.Errors, "max errors allowed")
 	flags.BoolVar(&f.nulls, "n", c.Nulls, "Include nulls in output")
@@ -81,24 +81,7 @@ func setArgs(flags *flag.FlagSet, c *Config, f *Flags) {
 	flags.IntVar(&f.workers, "w", c.Workers, "# of workers")
 }
 
-func parseFlags(progname string, input []string) (*Flags, func()) {
-	var flags *flag.FlagSet = flag.NewFlagSet(progname, flag.ContinueOnError)
-
-	var f Flags
-	setArgs(flags, &config, &f)
-	var argsUsage func() = getArgsUsage(flags)
-	flags.Usage = argsUsage
-
-	err := flags.Parse(input)
-	if err != nil {
-		fmt.Println("Error reading arguments", err)
-		os.Exit(0)
-	}
-
-	return &f, argsUsage
-}
-
-func getArgsUsage(f *flag.FlagSet) func() {
+func getFlagsUsage(f *flag.FlagSet) func() {
 	return func() {
 		fmt.Println("usage: bigboy [options] target [params]")
 		fmt.Println()
@@ -106,11 +89,28 @@ func getArgsUsage(f *flag.FlagSet) func() {
 	}
 }
 
-func parseArgs(progname string, input []string) *Args {
+func parseFlags(progname string, input []string, c *Config) (*Flags, func()) {
 	var flags *flag.FlagSet = flag.NewFlagSet(progname, flag.ContinueOnError)
 
 	var f Flags
-	setArgs(flags, &config, &f)
+	setFlags(flags, c, &f)
+	var flagsUsage func() = getFlagsUsage(flags)
+	flags.Usage = flagsUsage
+
+	err := flags.Parse(input)
+	if err != nil {
+		fmt.Println("Error reading arguments", err)
+		os.Exit(0)
+	}
+
+	return &f, flagsUsage
+}
+
+func parseArgs(progname string, input []string, c *Config) *Args {
+	var flags *flag.FlagSet = flag.NewFlagSet(progname, flag.ContinueOnError)
+
+	var f Flags
+	setFlags(flags, c, &f)
 
 	err := flags.Parse(input)
 	if err != nil {
