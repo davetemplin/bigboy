@@ -9,9 +9,8 @@ import (
 	"time"
 )
 
-// Args - Command Line Arguments
+// Args ...
 type Args struct {
-	config  string
 	errors  uint64
 	nulls   bool
 	out     string
@@ -20,20 +19,30 @@ type Args struct {
 	quiet   bool
 	retries uint64
 	target  string
-	version bool
 	workers int
+}
+
+// Flags - Command Line Arguments
+type Flags struct {
+	Args
+	config  string
+	version bool
 }
 
 var args Args
 var errors uint64
 
 func main() {
-	config = loadConfig(defaultConfig)
-	args = *parseArgs(os.Args[0], os.Args[1:], config)
+	var progname string = os.Args[0]
+	var input []string = os.Args[1:]
 
-	if args.version {
+	flags, usage := parseFlags(progname, input)
+	if flags.version {
 		stop(version, 0)
 	}
+
+	config = *loadConfig(flags.config)
+	args = *parseArgs(progname, input)
 
 	if args.target == "" {
 		usage()
@@ -60,22 +69,48 @@ func main() {
 	}
 }
 
-var flags *flag.FlagSet
+func setArgs(flags *flag.FlagSet, c *Config, f *Flags) {
+	flags.StringVar(&f.config, "c", defaultConfig, "Bigboy conifg file path")
+	flags.Uint64Var(&f.errors, "e", c.Errors, "max errors allowed")
+	flags.BoolVar(&f.nulls, "n", c.Nulls, "Include nulls in output")
+	flags.StringVar(&f.out, "o", "", "Output file or directory")
+	flags.IntVar(&f.page, "p", c.Page, "Rows extracted per query")
+	flags.BoolVar(&f.quiet, "q", c.Quiet, "Supress informational output")
+	flags.Uint64Var(&f.retries, "r", c.Retries, "max consecutive errors")
+	flags.BoolVar(&f.version, "v", false, "Print version info about bigboy and exit")
+	flags.IntVar(&f.workers, "w", c.Workers, "# of workers")
+}
 
-func parseArgs(progname string, input []string, c Config) (args *Args) {
-	flags = flag.NewFlagSet(progname, flag.ContinueOnError)
+func parseFlags(progname string, input []string) (*Flags, func()) {
+	var flags *flag.FlagSet = flag.NewFlagSet(progname, flag.ContinueOnError)
 
-	var a Args
-	flags.StringVar(&a.config, "c", defaultConfig, "Bigboy conifg file path")
-	flags.Uint64Var(&a.errors, "e", c.Errors, "max errors allowed")
-	flags.BoolVar(&a.nulls, "n", c.Nulls, "Include nulls in output")
-	flags.StringVar(&a.out, "o", "", "Output file or directory")
-	flags.IntVar(&a.page, "p", c.Page, "Rows extracted per query")
-	flags.BoolVar(&a.quiet, "q", c.Quiet, "Supress informational output")
-	flags.Uint64Var(&a.retries, "r", c.Retries, "max consecutive errors")
-	flags.BoolVar(&a.version, "v", false, "Print version info about bigboy and exit")
-	flags.IntVar(&a.workers, "w", c.Workers, "# of workers")
-	flags.Usage = usage
+	var f Flags
+	setArgs(flags, &config, &f)
+	var argsUsage func() = getArgsUsage(flags)
+	flags.Usage = argsUsage
+
+	err := flags.Parse(input)
+	if err != nil {
+		fmt.Println("Error reading arguments", err)
+		os.Exit(0)
+	}
+
+	return &f, argsUsage
+}
+
+func getArgsUsage(f *flag.FlagSet) func() {
+	return func() {
+		fmt.Println("usage: bigboy [options] target [params]")
+		fmt.Println()
+		f.PrintDefaults()
+	}
+}
+
+func parseArgs(progname string, input []string) *Args {
+	var flags *flag.FlagSet = flag.NewFlagSet(progname, flag.ContinueOnError)
+
+	var f Flags
+	setArgs(flags, &config, &f)
 
 	err := flags.Parse(input)
 	if err != nil {
@@ -85,16 +120,10 @@ func parseArgs(progname string, input []string, c Config) (args *Args) {
 
 	allArgs := flags.Args()
 	if len(allArgs) == 0 {
-		return &a
+		return &f.Args
 	}
 
-	a.target = allArgs[0]
-	a.params = allArgs[1:]
-	return &a
-}
-
-func usage() {
-	fmt.Println("usage: bigboy [options] target [params]")
-	fmt.Println()
-	flags.PrintDefaults()
+	f.target = allArgs[0]
+	f.params = allArgs[1:]
+	return &f.Args
 }

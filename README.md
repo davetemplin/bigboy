@@ -64,7 +64,6 @@ This section describes the `bigboy.json` file format.
 | `connections` | ... |
 | `errors` | ... |
 | `nulls` | ... |
-| `config` | ... |
 | `page` | ... |
 | `quiet` | ... |
 | `retries` | ... |
