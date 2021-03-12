@@ -10,6 +10,9 @@ debug
 # Test binary, build with `go test -c`
 *.test
 
+# Codecov coverage report
+coverage.txt
+
 # Local setup for development
 out*
 bigboy.json
