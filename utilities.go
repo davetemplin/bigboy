@@ -214,8 +214,8 @@ func fileExists(name string) bool {
 	path, err := os.Stat(name)
 	fmt.Println(path)
 	fmt.Println(err)
+	fmt.Println(os.IsNotExist(err))
 	if err == nil {
-		fmt.Println(!path.IsDir())
 		return !path.IsDir()
 	} else if os.IsNotExist(err) {
 		return false

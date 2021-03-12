@@ -46,6 +46,6 @@ jobs:
         uses: codecov/codecov-action@v1.0.2
         with:
           token: 1f3e08ec-9e32-4570-ac5a-b5e8d232bd44
-          file: coverage.txt
+          file: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}/coverage.txt
           flags: unittests
           name: codecov-umbrella
