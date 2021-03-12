@@ -2,44 +2,35 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 )
 
 // Config ...
 type Config struct {
-	Connections  map[string]*Connection  `json:"connections"`
-	Errors       uint64                  `json:"errors"`
-	Nulls        bool                    `json:"nulls"`
-	Page         int                     `json:"page"`
-	Quiet        bool                    `json:"quiet"`
-	Retries      uint64                  `json:"retries"`
-	Workers      int                     `json:"workers"`
+	Connections map[string]*Connection `json:"connections"`
+	Errors      uint64                 `json:"errors"`
+	Nulls       bool                   `json:"nulls"`
+	Page        int                    `json:"page"`
+	Quiet       bool                   `json:"quiet"`
+	Retries     uint64                 `json:"retries"`
+	Workers     int                    `json:"workers"`
 }
 
-var config Config
-const undefined = ^uint64(0)
+var config Config = Config{
+	Errors:  defaultErrors,
+	Page:    defaultPage,
+	Retries: defaultRetries,
+	Workers: defaultWorkers,
+}
 
-func loadConfig() {
-	config.Errors = undefined
-	config.Retries = undefined
-
-	name := "config.json"
-	if fileExists(name) {
-		buffer, err := ioutil.ReadFile(name)
+func loadConfig(path string) *Config {
+	if fileExists(path) {
+		buffer, err := ioutil.ReadFile(path)
 		check(err)
 		json.Unmarshal(buffer, &config)
+	} else {
+		fmt.Println("Using default configuration")
 	}
-
-	if config.Errors == undefined {
-		config.Errors = 100
-	}
-	if config.Page == 0 {
-		config.Page = 1000
-	}
-	if config.Retries == undefined {
-		config.Retries = 3
-	}
-	if config.Workers == 0 {
-		config.Workers = 4
-	}
+	return &config
 }

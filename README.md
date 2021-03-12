@@ -1,15 +1,22 @@
 # Bigboy
+
+[![Actions Status](https://github.com/igor-starostenko/bigboy/workflows/build/badge.svg)](https://github.com/igor-starostenko/bigboy/actions)
+[![codecov](https://codecov.io/gh/igor-starostenko/bigboy/branch/master/graph/badge.svg)](https://codecov.io/gh/igor-starostenko/bigboy)
+
 High data-rate SQL-to-JSON extraction from SQL Server, PostgreSQL, or MySQL.
 
 Written by Dave Templin
+Maintained by Igor Starostenko
 
 # Overview
+
 Bigboy is basically a **SQL-TO-JSON** tool that extracts data from SQL Server, PostgreSQL, or MySQL databases.
 It is designed to handle extremely high data extraction rates (multi-million rows / gigabyte-range) which is achieved by running multiple concurrent extraction queries from a configurable thread pool.
 The tool provides a simple configuration model for managing any number of data extractions.
 It also exposes a simple and minimal command-line interface (CLI) that works great for adhoc or batch/cron use-cases.
 
 ## Features
+
 * Extract data from SQL Server, PostgreSQL, or MySQL
 * Perform simple SQL-to-JSON transformations
 * Nest rows to form complex hierarchical (or document-oriented) data
@@ -27,17 +34,19 @@ It also exposes a simple and minimal command-line interface (CLI) that works gre
 ## Targets
 
 ## Fetching and Prefetching
+
 fetch, prefetch
 
 ## Transforms
+
 nest, script, split, timezone
 special field names: _parent, _value
-
 
 # Reference
 
 ## Command Arguments
 
+* `-c` Bigboy config file path *(default=\"bigboy.json\")*
 * `-e` Maximum overall number of errors before aborting *(default=100)*
 * `-n` Include nulls in output *(default=false)*
 * `-o` Output directory *(creates \"out\" directory if not specified)*
@@ -47,10 +56,11 @@ special field names: _parent, _value
 * `-v` Print version info about bigboy and exit
 * `-w` Number of background workers *(default=4)*
 
-> Above defaults can also be configured in the `config.json` file.
+> Above flags take priority over the configuration in `bigboy.json` file.
 
-## config.json
-This section describes the `config.json` file format.
+## bigboy.json
+
+This section describes the `bigboy.json` file format.
 
 | Name | Description |
 | --- | --- |
@@ -63,6 +73,7 @@ This section describes the `config.json` file format.
 | `workers` | ... |
 
 ### connections
+
 | Name | Description |
 | --- | --- |
 | `driver` | ... |
@@ -75,8 +86,8 @@ This section describes the `config.json` file format.
 | `max` | ... |
 | `timezone` | ... |
 
-
 ## target.json
+
 This section describes the `target.json` file format.
 
 | Name | Description |
@@ -91,6 +102,7 @@ This section describes the `target.json` file format.
 | `timezone` | ... |
 
 ### nest
+
 | Name | Description |
 | --- | --- |
 | `connection` | ... |
@@ -100,6 +112,7 @@ This section describes the `target.json` file format.
 | `timezone` | ... |
 
 ### param
+
 | Name | Description |
 | --- | --- |
 | `name` | ... |
@@ -107,11 +120,11 @@ This section describes the `target.json` file format.
 | `default` | ... |
 
 ### split
+
 | Name | Description |
 | --- | --- |
 | `by` | ... |
 | `value` | ... |
-
 
 ## Date Format
 
@@ -135,16 +148,13 @@ The following examples assume there is a target named `sales` with two paramters
 | `bigboy sales 2017-07-21 2017-07-23`  | From 7/21/2017 to 7/23/2017 midnight-to-midnight GMT
 | `bigboy sales 2017-07-21 2d`          | Midnight GMT of the previous day.
 
-
 > The time-zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory for an uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
-
-
 
 # Build
 
 Install [golang](https://golang.org/dl/)
 
-```
+```bash
 $ go get github.com/denisenkom/go-mssqldb
 $ go get github.com/lib/pq
 $ go get github.com/go-sql-driver/mysql
@@ -153,13 +163,19 @@ $ git clone https://github.com/davetemplin/bigboy.git
 $ go build
 ```
 
-## Cross compile
+## Test
+
+```bash
+$ go test .
 ```
+
+## Cross compile
+
+```bash
 $ build windows
 $ build linux
 $ build mac
 ```
-
 
 # References
 

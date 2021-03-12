@@ -30,11 +30,19 @@ func getRows(rows *sql.Rows, nulls bool, max int) ([]map[string]interface{}, boo
 
 		obj := make(map[string]interface{})
 		for i, col := range columns {
-			if nulls || values[i] != nil {
-				obj[col] = values[i]
+			val := values[i]
+			if nulls || val != nil {
+				var v interface{}
+				b, ok := val.([]byte)
+				if ok {
+					v = string(b)
+				} else {
+					v = val
+				}
+				obj[col] = v
 			}
 		}
-		result = append(result, obj)		
+		result = append(result, obj)
 
 		max--
 	}
