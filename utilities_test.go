@@ -33,13 +33,13 @@ func TestFileExistsIgnoresDirectories(t *testing.T) {
 func TestFileExistsThrowsError(t *testing.T) {
 	notDir := "LICENSE/NOT_EXIST"
 
-	actual := true
+	actual := false
 	defer func() {
 		if err := recover(); err != nil {
-			actual = false
+			actual = true
 		}
 
-		assert.False(t, actual, "Throws Error")
+		assert.True(t, actual, "Throws Error")
 	}()
 
 	fileExists(notDir)

@@ -42,12 +42,10 @@ jobs:
       - name: Generate coverage report
         run: |
           go test . -coverprofile=coverage.txt -covermode=atomic
-          pwd
-          ls
       - name: Upload coverage report
         uses: codecov/codecov-action@v1.0.2
         with:
           token: 1f3e08ec-9e32-4570-ac5a-b5e8d232bd44
-          file: ./coverage.txt
+          file: coverage.txt
           flags: unittests
           name: codecov-umbrella

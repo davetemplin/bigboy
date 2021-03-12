@@ -212,7 +212,10 @@ func contains(list []string, value string) bool {
 
 func fileExists(name string) bool {
 	path, err := os.Stat(name)
+	fmt.Println(path)
+	fmt.Println(err)
 	if err == nil {
+		fmt.Println(!path.IsDir())
 		return !path.IsDir()
 	} else if os.IsNotExist(err) {
 		return false
