@@ -1,5 +1,8 @@
 # Bigboy
 
+[![Actions Status](https://github.com/igor-starostenko/bigboy/workflows/build/badge.svg)](https://github.com/igor-starostenko/bigboy/actions)
+[![codecov](https://codecov.io/gh/igor-starostenko/bigboy/branch/master/graph/badge.svg)](https://codecov.io/gh/igor-starostenko/bigboy)
+
 High data-rate SQL-to-JSON extraction from SQL Server, PostgreSQL, or MySQL.
 
 Written by Dave Templin
