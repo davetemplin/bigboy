@@ -15,7 +15,7 @@ jobs:
       - name: Get dependencies
         run: |
           bash install.sh
-          go install
+          go mod init bigboy
       - name: Generate coverage report
         run: |
           go test . -coverprofile=coverage.txt -covermode=atomic
