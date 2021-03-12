@@ -1,6 +1,7 @@
 package main
 
 import (
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,13 +35,18 @@ func TestFileExistsThrowsError(t *testing.T) {
 	notDir := "LICENSE/NOT_EXIST"
 
 	var actual bool
-	defer func() {
-		if err := recover(); err != nil {
-			actual = true
-		}
+	if runtime.GOOS != "windows" {
+		defer func() {
+			if err := recover(); err != nil {
+				actual = true
+			}
 
-		assert.True(t, actual, "Throws Error")
-	}()
+			assert.True(t, actual, "Throws Error")
+		}()
+	}
 
-	fileExists(notDir)
+	actualWindows := fileExists(notDir)
+	if runtime.GOOS == "windows" {
+		assert.False(t, actualWindows, "Doesn't throw an Error")
+	}
 }
