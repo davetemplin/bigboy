@@ -15,6 +15,7 @@ jobs:
       - name: Get dependencies
         run: |
           bash install.sh
+          go install
       - name: Generate coverage report
         run: |
           go test . -coverprofile=coverage.txt -covermode=atomic

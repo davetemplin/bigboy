@@ -17,6 +17,7 @@ jobs:
     - name: Get dependencies
       run: |
         bash install.sh
+        go install
     - name: Test
       run: go test -v .
     - name: Build
@@ -34,6 +35,7 @@ jobs:
     - name: Get dependencies
       run: |
         bash install.sh
+        go install
     - uses: actions/cache@v2
       with:
         # In order:
