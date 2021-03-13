@@ -10,6 +10,17 @@ debug
 # Test binary, build with `go test -c`
 *.test
 
+# Codecov coverage report
+coverage.txt
+
+# Local setup for development
+out*
+bigboy.json
+extract.sql
+nest.sql
+prefetch.sql
+target.json
+
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 

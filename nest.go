@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 )
 
 func queryNest(db *sql.DB, nest *Nest, list []map[string]interface{}) error {
@@ -25,7 +25,7 @@ func queryNest(db *sql.DB, nest *Nest, list []map[string]interface{}) error {
 		slice := make([]interface{}, 0)
 		for _, child := range children {
 			if val, ok := child["_parent"]; ok {
-				if to_uint64(val) == to_uint64(parent[nest.ParentKey]) {
+				if toUint64(val) == toUint64(parent[nest.ParentKey]) {
 					delete(child, "_parent")
 					if _, ok := child["_value"]; ok {
 						slice = append(slice, child["_value"])

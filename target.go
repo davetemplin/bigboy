@@ -12,48 +12,48 @@ import (
 
 // Target ...
 type Target struct {
-	Connection  string          `json:"connection"`
-	Fetch       string          `json:"fetch"`
-	Params      []Param         `json:"params"`
-	Prefetch    bool            `json:"prefetch"`
-	Nest        []*Nest         `json:"nest"`
-	Script      string          `json:"script"`
-	Split       *Split          `json:"split"`
-	Timezone    string          `json:"timezone"`
-	connection  *Connection
-	extract     string
-	prefetch    string
-	params      []interface{}
-	location    *time.Location
+	Connection string  `json:"connection"`
+	Fetch      string  `json:"fetch"`
+	Params     []Param `json:"params"`
+	Prefetch   bool    `json:"prefetch"`
+	Nest       []*Nest `json:"nest"`
+	Script     string  `json:"script"`
+	Split      *Split  `json:"split"`
+	Timezone   string  `json:"timezone"`
+	connection *Connection
+	extract    string
+	prefetch   string
+	params     []interface{}
+	location   *time.Location
 }
 
 // Nest ...
 type Nest struct {
-	ChildKey    string          `json:"childKey"`
-	Connection  string          `json:"connection"`
-	Fetch       string          `json:"fetch"`
-	ParentKey   string          `json:"parentKey"`
-	Timezone    string          `json:"timezone"`
-	connection  *Connection
-	fetch       string
-	location    *time.Location
+	ChildKey   string `json:"childKey"`
+	Connection string `json:"connection"`
+	Fetch      string `json:"fetch"`
+	ParentKey  string `json:"parentKey"`
+	Timezone   string `json:"timezone"`
+	connection *Connection
+	fetch      string
+	location   *time.Location
 }
 
 // Param ...
 type Param struct {
-	Name        string          `json:"name"`
-	Type        string          `json:"type"`
-	Default     string          `json:"default"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Default string `json:"default"`
 }
 
 // Split ...
 type Split struct {
-	By          string          `json:"by"`
-	Value       string          `json:"value"`
+	By    string `json:"by"`
+	Value string `json:"value"`
 }
 
 func loadTarget() *Target {
-	name := path.Join(args.target, "target.json")
+	name := path.Join(args.target, defaultTarget)
 	checkFileExists(name)
 
 	buffer, err := ioutil.ReadFile(name)
@@ -95,7 +95,7 @@ func applyTargetDefaultParams(target *Target) {
 func resolveTargetQuery(target *Target) {
 	var err error
 	if target.Fetch == "" {
-		target.Fetch = "extract.sql"
+		target.Fetch = defaultExtract
 	}
 	name := path.Join(args.target, target.Fetch)
 	checkFileExists(name)
@@ -105,7 +105,7 @@ func resolveTargetQuery(target *Target) {
 
 func resolveTargetConnection(target *Target) {
 	if target.Connection == "" {
-		target.Connection = "default"
+		target.Connection = defaultConnection
 	}
 	target.connection = connect(target.Connection)
 }
@@ -172,12 +172,12 @@ func resolveTargetNest(target *Target) {
 	var err error
 	if target.Nest != nil {
 		if len(target.Nest) > 0 && target.Nest[0].Fetch == "" {
-			target.Nest[0].Fetch = "nest.sql"
+			target.Nest[0].Fetch = defaultNest
 		}
 
 		for i, nest := range target.Nest {
 			if nest.Fetch == "" {
-				stop(fmt.Sprintf("Unspecified query for nest #%d", i + 1), 1)
+				stop(fmt.Sprintf("Unspecified query for nest #%d", i+1), 1)
 			}
 
 			name := path.Join(args.target, nest.Fetch)
@@ -204,7 +204,7 @@ func resolveTargetNest(target *Target) {
 func resolveTargetPrefetch(target *Target) {
 	var err error
 	if target.Prefetch {
-		name := path.Join(args.target, "prefetch.sql")
+		name := path.Join(args.target, defaultPrefetch)
 		checkFileExists(name)
 		target.prefetch, err = loadFile(name)
 		check(err)

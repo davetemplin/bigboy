@@ -1,0 +1,51 @@
+on: [push]
+name: codecov
+jobs:
+  codecov:
+    env:
+      GOPATH: ${{ github.workspace }}
+      GOVERSION: 1.14
+    defaults:
+      run:
+        working-directory: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
+    name: codecov
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go ${{ env.GOVERSION }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GOVERSION }}
+        id: go
+      - name: Checkout code into the Go module directory
+        uses: actions/checkout@v2
+        with:
+          path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
+      - uses: actions/cache@v2
+        with:
+          # In order:
+          # * Module download cache
+          # * Build cache (Linux)
+          # * Build cache (Mac)
+          # * Build cache (Windows)
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            %LocalAppData%\go-build
+          key: ${{ runner.os }}-go${{ env.GOVERSION }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Get dependencies
+        run: |
+          bash install.sh
+          go mod init bigboy
+      - name: Generate coverage report
+        run: |
+          go test . -coverprofile=coverage.txt -covermode=atomic
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1.0.2
+        with:
+          token: 1f3e08ec-9e32-4570-ac5a-b5e8d232bd44
+          file: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}/coverage.txt
+          flags: unittests
+          name: codecov-umbrella
