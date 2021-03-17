@@ -45,8 +45,8 @@ jobs:
           draft: false
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
-          tag_name: ${{ steps.version.outputs.version }}
-          body_path: CHANGELOG.md
+          tag_name: ${{ github.ref }}
+          body_path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}/CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: build artifacts
