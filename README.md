@@ -167,10 +167,16 @@ $ go test .
 
 ## Cross compile
 
+On Windows:
 ```bash
 $ build windows
 $ build linux
-$ build mac
+$ build darwin
+```
+
+On unix:
+```bash
+bash build.sh
 ```
 
 # References
