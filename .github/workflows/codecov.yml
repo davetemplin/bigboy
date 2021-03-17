@@ -35,10 +35,6 @@ jobs:
           key: ${{ runner.os }}-go${{ env.GOVERSION }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Get dependencies
-        run: |
-          bash install.sh
-          go mod init bigboy
       - name: Generate coverage report
         run: |
           go test . -coverprofile=coverage.txt -covermode=atomic

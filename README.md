@@ -155,10 +155,6 @@ The following examples assume there is a target named `sales` with two paramters
 Install [golang](https://golang.org/dl/)
 
 ```bash
-$ go get github.com/denisenkom/go-mssqldb
-$ go get github.com/lib/pq
-$ go get github.com/go-sql-driver/mysql
-$ go get golang.org/x/crypto/md4 # required if cross building from windows
 $ git clone https://github.com/davetemplin/bigboy.git
 $ go build
 ```

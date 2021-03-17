@@ -36,10 +36,6 @@ jobs:
           key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go${{ matrix.go-version }}-
-      - name: Get dependencies
-        run: |
-          bash install.sh
-          go mod init bigboy
       - name: Test
         run: go test -v .
       - name: Build
