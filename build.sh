@@ -22,9 +22,9 @@ build_linux () {
 build_windows() {
   GOOS=windows 
   GOARCH=amd64
-  name=bigboy-${GOOS}-${GOARCH}.exe
-  GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$name
-  tar -czvf bin/$name.tar.gz bin/$name
+  name=bigboy-${GOOS}-${GOARCH}
+  GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$name.exe
+  zip bin/$name bin/$name.exe
 }
 
 if [[ -z $OS ]]; then
