@@ -6,11 +6,7 @@ name: release
 jobs:
   release:
     env:
-      GOPATH: ${{ github.workspace }}
       GOVERSION: 1.14
-    defaults:
-      run:
-        working-directory: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
     name: release
     runs-on: ubuntu-latest
     steps:
@@ -21,8 +17,6 @@ jobs:
         id: go
       - name: Checkout code into the Go module directory
         uses: actions/checkout@v2
-        with:
-          path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
       - uses: actions/cache@v2
         with:
           path: |
@@ -46,7 +40,7 @@ jobs:
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
           tag_name: ${{ github.ref }}
-          body_path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}/CHANGELOG.md
+          body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: build artifacts
