@@ -1,6 +1,6 @@
 package main
 
-const version = "1.3.0"
+const version = "1.3.1"
 const (
 	defaultErrors    = 100
 	defaultPage      = 1000
