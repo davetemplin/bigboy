@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: go build -v .
       - name: version
-        run: echo "::set-output name=v$(./bigboy -v)"
+        run: echo "::set-output name=version::$(./bigboy -v)"
         id: version
       - name: release
         uses: actions/create-release@v1
