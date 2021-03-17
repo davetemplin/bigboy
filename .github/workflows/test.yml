@@ -1,7 +1,7 @@
 on: [push]
-name: build
+name: test
 jobs:
-  build:
+  test:
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
@@ -38,5 +38,3 @@ jobs:
             ${{ runner.os }}-go${{ matrix.go-version }}-
       - name: Test
         run: go test -v .
-      - name: Build
-        run: go build -v .
