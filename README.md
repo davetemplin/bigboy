@@ -179,6 +179,11 @@ On unix:
 bash build.sh
 ```
 
+## Release
+
+Upload build executables is automated using `release` workflow in GitHub actions. It gets triggered by a push of a new git tag to origin.
+Make sure to keep [CHANGELOG.md](./CHANGELOG.md) updated and [version](./constants.go) incremented.
+
 # References
 
 There are lots of ways to approach ETL, and lots of vendors that want to sell you a solution!
