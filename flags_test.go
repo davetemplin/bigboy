@@ -75,5 +75,4 @@ func TestParseFlags(t *testing.T) {
 			assert.Equal(t, expectedWorkers, flags.workers, "Args workers set")
 		})
 	}
-
 }
