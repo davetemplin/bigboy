@@ -52,8 +52,8 @@ type Split struct {
 	Value string `json:"value"`
 }
 
-func loadTarget() *Target {
-	name := path.Join(args.target, defaultTarget)
+func loadTarget(targetPath string) *Target {
+	name := path.Join(targetPath, defaultTarget)
 	checkFileExists(name)
 
 	buffer, err := ioutil.ReadFile(name)
@@ -61,7 +61,6 @@ func loadTarget() *Target {
 
 	var target *Target
 	json.Unmarshal(buffer, &target)
-	resolveTarget(target)
 	return target
 }
 
@@ -72,7 +71,6 @@ func resolveTarget(target *Target) {
 	resolveTargetParams(target)
 	resolveTargetNest(target)
 	resolveTargetPrefetch(target)
-	validateTarget(target)
 }
 
 func paramName(param Param, i int) string {
