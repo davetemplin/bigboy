@@ -28,9 +28,7 @@ func main() {
 	}
 
 	t := time.Now()
-	target := loadTarget(args.target)
-	resolveTarget(target)
-	validateTarget(target)
+	target := loadTarget()
 
 	var wg sync.WaitGroup
 	wg.Add(1)

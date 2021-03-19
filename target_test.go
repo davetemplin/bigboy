@@ -31,12 +31,12 @@ func DeleteTarget(path string) {
 	}
 }
 
-func TestLoadTarget(t *testing.T) {
+func TestLoadTargetEmpty(t *testing.T) {
 	targetPath := "test"
 	filePath := path.Join(targetPath, defaultTarget)
 	CreateTarget(filePath, "{}")
 
-	target := loadTarget(targetPath)
+	target := loadTarget()
 
 	assert.Equal(t, "", target.Connection, "Target Connection set")
 	assert.Equal(t, "", target.Fetch, "Target Fetch set")
