@@ -25,15 +25,19 @@ func CreateFile(path string, json string) {
 	}
 }
 
-func DeleteFile(path string) {
-	err := os.Remove(path)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func TestLoadTargetEmpty(t *testing.T) {
 	args = Args{target: "test"}
+	targetPath := path.Join(args.target, defaultTarget)
+	extractPath := path.Join(args.target, defaultExtract)
+
+	os.Remove(targetPath)
+	os.Remove(extractPath)
+	os.Remove(args.target)
+
+	err := os.Mkdir(args.target, 0755)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -49,9 +53,7 @@ func TestLoadTargetEmpty(t *testing.T) {
 	}
 	config = Config{Connections: connections}
 
-	targetPath := path.Join(args.target, defaultTarget)
 	CreateFile(targetPath, "{}")
-	extractPath := path.Join(args.target, defaultExtract)
 	extractConfig := "{}"
 	CreateFile(extractPath, extractConfig)
 
@@ -73,5 +75,7 @@ func TestLoadTargetEmpty(t *testing.T) {
 	assert.Equal(t, []interface{}(nil), target.params, "Target params set")
 	assert.Equal(t, (*time.Location)(nil), target.location, "Target location set")
 
-	DeleteFile(targetPath)
+	os.Remove(targetPath)
+	os.Remove(extractPath)
+	os.Remove(args.target)
 }
