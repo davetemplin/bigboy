@@ -42,7 +42,7 @@ func TestLoadTargetEmpty(t *testing.T) {
 	extractConfig := "{}"
 	CreateFile(extractPath, extractConfig)
 
-	mock.ExpectBegin()
+	mock.ExpectPing()
 
 	target := loadTarget()
 
@@ -110,7 +110,7 @@ func TestLoadTarget(t *testing.T) {
 	prefetchConfig := "SELECT id FROM testTable"
 	CreateFile(prefetchPath, prefetchConfig)
 
-	mock.ExpectBegin()
+	mock.ExpectPing()
 
 	target := loadTarget()
 
