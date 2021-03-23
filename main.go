@@ -29,7 +29,14 @@ func main() {
 
 	t := time.Now()
 	target := loadTarget()
+	run(target)
+	disconnect()
+	if !args.quiet {
+		fmt.Printf("%s: %d seconds elapsed\n", args.target, int(time.Since(t).Seconds()))
+	}
+}
 
+func run(target *Target) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func(target *Target) {
@@ -39,10 +46,5 @@ func main() {
 		go transform(target, extractChannel, transformChannel)
 		go write(target, transformChannel, &wg)
 	}(target)
-
 	wg.Wait()
-	disconnect()
-	if !args.quiet {
-		fmt.Printf("%s: %d seconds elapsed\n", args.target, int(time.Since(t).Seconds()))
-	}
 }

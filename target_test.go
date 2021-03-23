@@ -10,21 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func CreateFile(path string, json string) {
-	f, err := os.Create(path)
-	if err != nil {
-		panic(err)
-	}
-	_, err = f.WriteString(json)
-	if err != nil {
-		panic(err)
-	}
-	err = f.Close()
-	if err != nil {
-		panic(err)
-	}
-}
-
 func TestLoadTargetEmpty(t *testing.T) {
 	args = Args{target: "testEmpty"}
 	targetPath := path.Join(args.target, defaultTarget)
