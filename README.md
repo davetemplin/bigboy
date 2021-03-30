@@ -27,13 +27,20 @@ It also exposes a simple and minimal command-line interface (CLI) that works gre
 
 ## Quickstart
 
+* Download the [latest release](https://github.com/igor-starostenko/bigboy/releases/latest) of bigboy for your operating system
+* Create a `bigboy.json` with the list of `connections` (See [configuration details](#configuration) for more information)
+* Create a target directory with `target.json` file with `connection` name (See [target](#targets) for more information)
+* Create `extract.sql` file in the newly created target directory with the SQL query to use to extract the data (See [prefetch](#prefetching) section to extract data in parallel)
+* Consider using available [transforms](#transforms) to modify the data on the fly
+* Extract the data from the target: `./bigboy ${target}` (You may need to change access permissions to the executable by running `chmod +x bigboy`)
+
 # Concepts
 
 ## Connections
 
 ## Targets
 
-## Fetching and Prefetching
+## Prefetching
 
 fetch, prefetch
 
@@ -58,7 +65,7 @@ special field names: _parent, _value
 
 > Above flags take priority over the configuration in `bigboy.json` file.
 
-## bigboy.json
+## Configuration
 
 This section describes the `bigboy.json` file format.
 
