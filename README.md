@@ -33,12 +33,22 @@ It also exposes a simple and minimal command-line interface (CLI) that works gre
 * Create `extract.sql` file in the newly created target directory with the SQL query to use to extract the data (See [prefetch](#prefetching) section to extract data in parallel)
 * Consider using available [transforms](#transforms) to modify the data on the fly
 * Extract the data from the target: `./bigboy ${target}` (You may need to change access permissions to the executable by running `chmod +x bigboy`)
+* The data is extracted in a JSONL (newline delimited JSON) format in `out/${target}/` directory (by default) with current date filename
 
 # Concepts
 
 ## Connections
 
+Authentication credentials and connection configuration can be set for all database sources in a single config file (See [configuration schema](#configuration))
+
 ## Targets
+
+A directory path that contains required files (instructions) on how to extract data from a source database. Target may contain the following files:
+
+- `target.json` - **REQUIRED** - core configuration file of a target that specifiec which connection to use as well as other parameters (See [target.json schema](#target.json))
+- `extract.sql` - **REQUIRED** - SQL query to be used to extract data from source database for a given connection. If prefetch is set up, needs to apply string interpolation (For example `WHERE id IN (%s)`)
+- `prefetch.sql` - *OPTIONAL* - if `target.json` has `prefetch` set to `true`, the `prefetch.sql` loads ids to be passed into `extract.sql` and run in parallel
+- `nest.sql` - *OPTIONAL* - if `target.json` has `nest` array of objects configured, the `nest.sql` loads ids to be added into the main output with new column for each object
 
 ## Prefetching
 
@@ -69,69 +79,69 @@ special field names: _parent, _value
 
 This section describes the `bigboy.json` file format.
 
-| Name | Description |
-| --- | --- |
-| `connections` | ... |
-| `errors` | ... |
-| `nulls` | ... |
-| `page` | ... |
-| `quiet` | ... |
-| `retries` | ... |
-| `workers` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `connections` | [connection](#connection)[] | + | Array of connection configurations for each database source |
+| `errors` | INTEGER | - | Total number of errors to ignore before aborting |
+| `nulls` | BOOLEAN | - | If nulls are allowed to be included in the output |
+| `page` | INTEGER | - | Number of rows per page |
+| `quiet` | BOOLEAN | - | If the terminal output should be supressed |
+| `retries` | INTEGER | - | Number of retries to perform in case of an error |
+| `workers` | INTEGER | - | Number of workers to run extracts in parallel |
 
 ### connections
 
-| Name | Description |
-| --- | --- |
-| `driver` | ... |
-| `server` | ... |
-| `database` | ... |
-| `dsn` | ... |
-| `port` | ... |
-| `user` | ... |
-| `password` | ... |
-| `max` | ... |
-| `timezone` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `driver` | STRING | + | Database driver (`mysql`, `mssql`, `postgres`) |
+| `server` | STRING | + | Database connection string |
+| `database` | STRING | + | Database name |
+| `dsn` | STRING | - | DB dsn |
+| `port` | INTEGER | - | DB port |
+| `user` | STRING | - | DB username for authentication |
+| `password` | STRING | - | DB password for authentication |
+| `max` | | - | ... |
+| `timezone` | | - | ... |
 
 ## target.json
 
 This section describes the `target.json` file format.
 
-| Name | Description |
-| --- | --- |
-| `connection` | ... |
-| `fetch` | ... |
-| `params` | ... |
-| `prefetch` | ... |
-| `nest` | ... |
-| `script` | ... |
-| `split` | ... |
-| `timezone` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `connection` | STRING | + | Connection name |
+| `fetch` | | - | ... |
+| `params` | | [param](#param) | ... |
+| `prefetch` | BOOLEAN | - | if `prefetch.sql` should be used for parallel extraction |
+| `nest` | [nest](#nest)[] | array of columns to be added for each record |
+| `script` | | - | ... |
+| `split` | | - | ... |
+| `timezone` | | - | ... |
 
 ### nest
 
-| Name | Description |
-| --- | --- |
-| `connection` | ... |
-| `childKey` | ... |
-| `parentKey` | ... |
-| `fetch` | ... |
-| `timezone` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `connection` | STRING | - | Allows to use different database source. Uses target connection by default |
+| `childKey` | STRING | + | New array property that would contain all matched records |
+| `parentKey` | STRING | + | Has to be an integer |
+| `fetch` | | - |... |
+| `timezone` | | - | ... |
 
 ### param
 
-| Name | Description |
-| --- | --- |
-| `name` | ... |
-| `type` | ... |
-| `default` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | | | ... |
+| `type` | | | ... |
+| `default` | | | ... |
 
 ### split
 
-| Name | Description |
-| --- | --- |
-| `by` | ... |
-| `value` | ... |
+| Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| `by` | | | ... |
+| `value` | | | ... |
 
 ## Date Format
 
