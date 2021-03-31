@@ -70,6 +70,12 @@ func toUint64(value interface{}) uint64 {
 		return uint64(value.(uint32))
 	case uint64:
 		return uint64(value.(uint64))
+	case string:
+		number, err := strconv.ParseInt(value.(string), 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		return uint64(number)
 	default:
 		panic("cannot convert value to uint64")
 	}
