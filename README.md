@@ -61,8 +61,17 @@ Queries can accept parameters to customize the request from outside the target o
 
 ## Transforms
 
-nest, script, split, timezone
-special field names: _parent, _value
+### Nesting
+
+Allows for the output JSON records to have nested arrays. To enable, the [target](#target.json) has to have `nest` params configured and `nest.sql` defined.
+The nest query runs before the main extract and then inserts the results in an array format into a column defined in target `childKey` param. For records to be inserted into the result of the main extract query, the `nest.sql` needs to have a column with the name `_parent` which value would match the value of the column in the `extract.sql` which name is defined in target `parentKey` param.
+If `nest.sql` has a `_value` column only the values would be inserted in the array. Otherwise the entire record object (except the `_parent` column) would be added inside the array.
+
+### Scripting
+
+### Data split
+
+### Timezone format
 
 # Reference
 
