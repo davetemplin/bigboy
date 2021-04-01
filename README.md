@@ -105,12 +105,12 @@ This section describes the `bigboy.json` file format.
 
 ## target.json
 
-This section describes the `target.json` file format.
+This section describes the `target.json` (default) file format.
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | `connection` | STRING | + | Connection name |
-| `fetch` | | - | ... |
+| `fetch` | STRING | - | File name for the main extract SQL query. Default `extract.sql` |
 | `params` | | [param](#param) | ... |
 | `prefetch` | BOOLEAN | - | if `prefetch.sql` should be used for parallel extraction |
 | `nest` | [nest](#nest)[] | array of columns to be added for each record |
@@ -125,7 +125,7 @@ This section describes the `target.json` file format.
 | `connection` | STRING | - | Allows to use different database source. Uses target connection by default |
 | `childKey` | STRING | + | New array property that would contain all matched records |
 | `parentKey` | STRING | + | Has to be an integer |
-| `fetch` | | - |... |
+| `fetch` | STRING | - | File name for the nest SQL query. Default `nest.sql` for the first nest column |
 | `timezone` | | - | ... |
 
 ### param
@@ -201,7 +201,7 @@ bash build.sh
 Upload build executables is automated using `release` workflow in GitHub actions. It gets triggered by a push of a new git tag to origin.
 Make sure to keep [CHANGELOG.md](./CHANGELOG.md) updated and [version](./constants.go) incremented.
 
-# References
+# Helpful links
 
 There are lots of ways to approach ETL, and lots of vendors that want to sell you a solution!
 Here are some additional references that may be helpful...
