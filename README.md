@@ -55,6 +55,10 @@ A directory path that contains required files (instructions) on how to extract d
 To extract data on large datasets it's recommended to utilize the prefetch feature that allows to split extract in multiple parallel processes. When [target](#target.json) has `prefetch` set to `true`, the `prefetch.sql` has to be provided that has an SQL query with a `SELECT` statement with one integer column.
 The results of the prefetch query would be be passed into multiple processes each execute an `extract.sql` with a subset of the prefetched numbers. The extract query needs to apply string interpolation (For example `WHERE id IN (%s)`)
 
+## Parameterization
+
+Queries can accept parameters to customize the request from outside the target on runtime. Params can be configured in [target](#target.json) with a given type and default value. On runtime the params are passed into a `prefetch.sql` or an `extract.sql` using syntax like `WHERE date >= ?1`, where `1` is the index of the param (starting from `1`).
+
 ## Transforms
 
 nest, script, split, timezone
@@ -101,7 +105,7 @@ This section describes the `bigboy.json` file format.
 | `port` | INTEGER | - | DB port |
 | `user` | STRING | - | DB username for authentication |
 | `password` | STRING | - | DB password for authentication |
-| `max` | | - | ... |
+| `max` | INTEGER | - | Maximum number of open database connections |
 | `timezone` | | - | ... |
 
 ## target.json
@@ -112,7 +116,7 @@ This section describes the `target.json` (default) file format.
 | --- | --- | --- | --- |
 | `connection` | STRING | + | Connection name |
 | `fetch` | STRING | - | File name for the main extract SQL query. Default `extract.sql` |
-| `params` | | [param](#param) | ... |
+| `params` | | [param](#param) | Allows to pass params into a query. For example to filter the data |
 | `prefetch` | BOOLEAN | - | if `prefetch.sql` should be used for parallel extraction |
 | `nest` | [nest](#nest)[] | array of columns to be added for each record |
 | `script` | | - | ... |
@@ -133,9 +137,9 @@ This section describes the `target.json` (default) file format.
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `name` | | | ... |
-| `type` | | | ... |
-| `default` | | | ... |
+| `name` | STRING | - | Name of the param. Only use for logging and readability |
+| `type` | STRING | - | Converts the text argument to the given type. One of `integer`, `float`, `string`, `boolean` or `date`. **Required** unless param is `null` |
+| `default` | STRING | - | Setting default param if no command line params are passed |
 
 ### split
 
