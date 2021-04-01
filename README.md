@@ -52,7 +52,8 @@ A directory path that contains required files (instructions) on how to extract d
 
 ## Prefetching
 
-fetch, prefetch
+To extract data on large datasets it's recommended to utilize the prefetch feature that allows to split extract in multiple parallel processes. When [target](#target.json) has `prefetch` set to `true`, the `prefetch.sql` has to be provided that has an SQL query with a `SELECT` statement with one integer column.
+The results of the prefetch query would be be passed into multiple processes each execute an `extract.sql` with a subset of the prefetched numbers. The extract query needs to apply string interpolation (For example `WHERE id IN (%s)`)
 
 ## Transforms
 
