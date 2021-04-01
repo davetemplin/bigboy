@@ -69,9 +69,15 @@ If `nest.sql` has a `_value` column only the values would be inserted in the arr
 
 ### Scripting
 
+TODO
+
 ### Data split
 
+TODO
+
 ### Timezone format
+
+TODO
 
 # Reference
 
@@ -181,12 +187,15 @@ The following examples assume there is a target named `sales` with two paramters
 
 > The time-zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory for an uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
 
-# Build
+# Development
 
-Install [golang](https://golang.org/dl/)
+## Build
+
+Install [golang](https://golang.org/dl/).
+
+Clone the repo and `cd` into it.
 
 ```bash
-$ git clone https://github.com/davetemplin/bigboy.git
 $ go build
 ```
 
