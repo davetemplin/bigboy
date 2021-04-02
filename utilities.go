@@ -81,6 +81,25 @@ func toUint64(value interface{}) uint64 {
 	}
 }
 
+func toTime(value interface{}, layout string) time.Time {
+	switch value.(type) {
+	case time.Time:
+		return value.(time.Time)
+	case string:
+		if layout == "" {
+			panic("string to time requires layout")
+		}
+
+		t, err := time.Parse(layout, value.(string))
+		if err != nil {
+			panic(err)
+		}
+		return t
+	default:
+		panic("cannot convert value to time.Time")
+	}
+}
+
 func take(list []map[string]interface{}, key string) []uint64 {
 	result := make([]uint64, 0)
 	for _, obj := range list {

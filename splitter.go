@@ -8,9 +8,9 @@ import (
 
 type splitter struct {
 	target *Target
-	files map[string]*os.File
-	dir string
-	day string
+	files  map[string]*os.File
+	dir    string
+	day    string
 }
 
 func newSplitter(target *Target, dir string) *splitter {
@@ -30,7 +30,8 @@ func (s *splitter) split(obj map[string]interface{}) *os.File {
 }
 
 func (s *splitter) splitByDay(obj map[string]interface{}) *os.File {
-	t := obj[s.target.Split.Value].(time.Time)
+	value := obj[s.target.Split.Value]
+	t := toTime(value, s.target.Split.Layout)
 	key := day(t)
 	return s.file(key)
 }
@@ -40,7 +41,7 @@ func (s *splitter) file(key string) *os.File {
 	if ok {
 		return f
 	}
-	p := path.Join(s.dir, key + ".json")
+	p := path.Join(s.dir, key+".json")
 	f, err := os.Create(p)
 	check(err)
 	s.files[key] = f
