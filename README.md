@@ -69,7 +69,7 @@ If `nest.sql` has a `_value` column only the values would be inserted in the arr
 
 ### Scripting
 
-TODO
+*Not yet implemented*
 
 ### Data split
 
@@ -134,7 +134,7 @@ This section describes the `target.json` (default) file format.
 | `params` | | [param](#param) | Allows to pass params into a query. For example to filter the data |
 | `prefetch` | BOOLEAN | - | if `prefetch.sql` should be used for parallel extraction |
 | `nest` | [nest](#nest)[] | array of columns to be added for each record |
-| `script` | | - | ... |
+| `script` | STRING | - | *Not yet implemented* |
 | `split` | | - | ... |
 | `timezone` | | - | ... |
 
