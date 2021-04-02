@@ -71,9 +71,11 @@ If `nest.sql` has a `_value` column only the values would be inserted in the arr
 
 *Not yet implemented*
 
-### Data split
+### Split output
 
-TODO
+Produces multiple files instead of one. To enable, the [target](#target.json) has to have `split` param set.
+When configured, the output argument set with `-o` flag has to be a directory without extension.
+Currently supports only split by `date`. Every output file would contain records for each day returned from the extract query. Use `layout` param for MySQL or when the date column is stored as STRING.
 
 ### Timezone format
 
@@ -132,10 +134,10 @@ This section describes the `target.json` (default) file format.
 | `connection` | STRING | + | Connection name |
 | `fetch` | STRING | - | File name for the main extract SQL query. Default `extract.sql` |
 | `params` | | [param](#param) | Allows to pass params into a query. For example to filter the data |
-| `prefetch` | BOOLEAN | - | if `prefetch.sql` should be used for parallel extraction |
-| `nest` | [nest](#nest)[] | array of columns to be added for each record |
+| `prefetch` | BOOLEAN | - | If `prefetch.sql` should be used for parallel extraction |
+| `nest` | [nest](#nest)[] | Array of columns to be added for each record |
 | `script` | STRING | - | *Not yet implemented* |
-| `split` | | - | ... |
+| `split` | [split](#split) | - | Produces multiple files instead of one |
 | `timezone` | | - | ... |
 
 ### nest
@@ -160,8 +162,9 @@ This section describes the `target.json` (default) file format.
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `by` | | | ... |
-| `value` | | | ... |
+| `by` | STRING | + | Has to be set to `date` |
+| `layout` | STRING | - | Converts to date from string for MySQL if the date column is STRING (See [golang layout format](https://yourbasic.org/golang/format-parse-string-time-date-example/) |
+| `value` | STRING | + | Column name which contains the value by which the files to split |
 
 ## Date Format
 
