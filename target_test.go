@@ -66,7 +66,7 @@ func TestLoadTargetEmpty(t *testing.T) {
 }
 
 func TestLoadTarget(t *testing.T) {
-	args = Args{target: "test"}
+	args = Args{target: "testLoad"}
 	targetPath := path.Join(args.target, defaultTarget)
 	extractPath := path.Join(args.target, defaultExtract)
 	prefetchPath := path.Join(args.target, defaultPrefetch)
