@@ -79,7 +79,27 @@ Currently supports only split by `date`. Every output file would contain records
 
 ### Timezone format
 
-TODO
+All dates are assumed to be in GMT unless a timezone is specified.
+If a time is not specified then midnight GMT is assumed.
+Examples below illustrate various scenarios of specifying a date or date-range.
+
+The following examples assume there is a target named `log` with a single paramter of type `date` representing a start date for the extraction.
+
+| Example                               | Comments |
+| ------------------------------------- | ------------------------------------------------------- |
+| `bigboy log 2017-07-21`               | 7/21/2017 at midnight GMT |
+| `bigboy log "2017-07-21 15:00:00"`    | 7/21/2017 at 3pm GMT |
+| `bigboy log today`                    | Midnight GMT of the current day |
+| `bigboy log yesterday`                | Midnight GMT of the previous day |
+
+The following examples assume there is a target named `sales` with two parameters of type `date` representing a date range for the extraction.
+
+| Example                               | Comments |
+| ------------------------------------- | ------------------------------------------------------- |
+| `bigboy sales 2017-07-21 2017-07-23`  | From 7/21/2017 to 7/23/2017 midnight-to-midnight GMT |
+| `bigboy sales 2017-07-21 2d`          | Midnight GMT of the previous day |
+
+> The time-zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory for an uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
 
 # Reference
 
@@ -123,7 +143,7 @@ This section describes the `bigboy.json` file format.
 | `user` | STRING | - | DB username for authentication |
 | `password` | STRING | - | DB password for authentication |
 | `max` | INTEGER | - | Maximum number of open database connections |
-| `timezone` | | - | ... |
+| `timezone` | STRING | - | Can be `UTC` or `Local` or IANA Time Zone database format (For example `America/Los_Angeles`) |
 
 ## target.json
 
@@ -138,7 +158,7 @@ This section describes the `target.json` (default) file format.
 | `nest` | [nest](#nest)[] | Array of columns to be added for each record |
 | `script` | STRING | - | *Not yet implemented* |
 | `split` | [split](#split) | - | Produces multiple files instead of one |
-| `timezone` | | - | ... |
+| `timezone` | STRING | - | Defaults to connection timezone |
 
 ### nest
 
@@ -148,7 +168,7 @@ This section describes the `target.json` (default) file format.
 | `childKey` | STRING | + | New array property that would contain all matched records |
 | `parentKey` | STRING | + | Has to be an integer |
 | `fetch` | STRING | - | File name for the nest SQL query. Default `nest.sql` for the first nest column |
-| `timezone` | | - | ... |
+| `timezone` | STRING | - | Defaults to connection timezone |
 
 ### param
 
@@ -165,30 +185,6 @@ This section describes the `target.json` (default) file format.
 | `by` | STRING | + | Has to be set to `date` |
 | `layout` | STRING | - | Converts to date from string for MySQL if the date column is STRING (See [golang layout format](https://yourbasic.org/golang/format-parse-string-time-date-example/) |
 | `value` | STRING | + | Column name which contains the value by which the files to split |
-
-## Date Format
-
-All dates are assumed to be in GMT unless a timezone is specified.
-If a time is not specified then midnight GMT is assumed.
-Examples below illustrate various scenarios of specifying a date or date-range.
-
-The following examples assume there is a target named `log` with a single paramter of type `date` representing a start date for the extraction.
-
-| Example                               | Comments
-| ------------------------------------- | ------------------------------------------------------- |
-| `bigboy log 2017-07-21`               | 7/21/2017 at midnight GMT
-| `bigboy log "2017-07-21 15:00:00"`    | 7/21/2017 at 3pm GMT
-| `bigboy log today`                    | Midnight GMT of the current day
-| `bigboy log yesterday`                | Midnight GMT of the previous day
-
-The following examples assume there is a target named `sales` with two paramters of type `date` representing a date range for the extraction.
-
-| Example                               | Comments
-| ------------------------------------- | ------------------------------------------------------- |
-| `bigboy sales 2017-07-21 2017-07-23`  | From 7/21/2017 to 7/23/2017 midnight-to-midnight GMT
-| `bigboy sales 2017-07-21 2d`          | Midnight GMT of the previous day.
-
-> The time-zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory for an uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
 
 # Development
 
