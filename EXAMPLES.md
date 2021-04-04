@@ -115,6 +115,7 @@ Output:
 ### Nest
 
 Combines two query results into one
+Note: the parent column has to be numeric. Currently can't perform nesting by string
 
 #### nesting objects
 
@@ -244,7 +245,7 @@ WHERE date BETWEEN '2020-01-01' AND '2020-01-07'
 }
 ```
 
-Run `bigboy examples/split` in terminal. For split to work, the `out/examples/split` directory has to be created in advance
+Run `bigboy examples/split` in terminal
 Output is saved in multiple files with `json` extension under `out/examples/split` each has records created in a corresponding date.
 
 ```

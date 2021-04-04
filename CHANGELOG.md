@@ -4,9 +4,13 @@
 
 - GO modules set up
 - Continuous deployment/release workflow
-- Separate packages to isolate dependencies
 - Unit test main with DB mocks
-- Documentation gaps filled
+- Separate file for CLI flags parser
+- Bugfix: nesting with MySQL by numeric value
+- Bugfix: split by date for MySQL using layout for time parsing
+- Bugfix: create directory if target doesn't include `/` in the end when using split
+- Documentation coverage improved
+- Examples added
 
 ## v1.3.0
 
