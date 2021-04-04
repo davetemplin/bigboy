@@ -244,7 +244,7 @@ WHERE date BETWEEN '2020-01-01' AND '2020-01-07'
 }
 ```
 
-Run `bigboy examples/split` in terminal
+Run `bigboy examples/split` in terminal. For split to work, the `out/examples/split` directory has to be created in advance
 Output is saved in multiple files with `json` extension under `out/examples/split` each has records created in a corresponding date.
 
 ```
