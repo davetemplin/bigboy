@@ -45,25 +45,25 @@ Authentication credentials and connection configuration can be set for all datab
 
 A directory path that contains required files (instructions) on how to extract data from a source database. Target may contain the following files:
 
-- `target.json` - **REQUIRED** - core configuration file of a target that specifiec which connection to use as well as other parameters (See [target.json schema](#target.json))
+- `target.json` - **REQUIRED** - core configuration file of a target that specifiec which connection to use as well as other parameters (See [target.json schema](#target))
 - `extract.sql` - **REQUIRED** - SQL query to be used to extract data from source database for a given connection. If prefetch is set up, needs to apply string interpolation (For example `WHERE id IN (%s)`)
 - `prefetch.sql` - *OPTIONAL* - if `target.json` has `prefetch` set to `true`, the `prefetch.sql` loads ids to be passed into `extract.sql` and run in parallel
 - `nest.sql` - *OPTIONAL* - if `target.json` has `nest` array of objects configured, the `nest.sql` loads ids to be added into the main output with new column for each object
 
 ## Prefetching
 
-To extract data on large datasets it's recommended to utilize the prefetch feature that allows to split extract in multiple parallel processes. When [target](#target.json) has `prefetch` set to `true`, the `prefetch.sql` has to be provided that has an SQL query with a `SELECT` statement with one integer column.
+To extract data on large datasets it's recommended to utilize the prefetch feature that allows to split extract in multiple parallel processes. When [target](#target) has `prefetch` set to `true`, the `prefetch.sql` has to be provided that has an SQL query with a `SELECT` statement with one integer column.
 The results of the prefetch query would be be passed into multiple processes each execute an `extract.sql` with a subset of the prefetched numbers. The extract query needs to apply string interpolation (For example `WHERE id IN (%s)`)
 
 ## Parameterization
 
-Queries can accept parameters to customize the request from outside the target on runtime. Params can be configured in [target](#target.json) with a given type and default value. On runtime the params are passed into a `prefetch.sql` or an `extract.sql` using syntax like `WHERE date >= ?1`, where `1` is the index of the param (starting from `1`).
+Queries can accept parameters to customize the request from outside the target on runtime. Params can be configured in [target](#target) with a given type and default value. On runtime the params are passed into a `prefetch.sql` or an `extract.sql` using syntax like `WHERE date >= ?1`, where `1` is the index of the param (starting from `1`).
 
 ## Transforms
 
 ### Nesting
 
-Allows for the output JSON records to have nested arrays. To enable, the [target](#target.json) has to have `nest` params configured and `nest.sql` defined.
+Allows for the output JSON records to have nested arrays. To enable, the [target](#target) has to have `nest` params configured and `nest.sql` defined.
 The nest query runs before the main extract and then inserts the results in an array format into a column defined in target `childKey` param. For records to be inserted into the result of the main extract query, the `nest.sql` needs to have a column with the name `_parent` which value would match the value of the column in the `extract.sql` which name is defined in target `parentKey` param.
 If `nest.sql` has a `_value` column only the values would be inserted in the array. Otherwise the entire record object (except the `_parent` column) would be added inside the array.
 
@@ -73,7 +73,7 @@ If `nest.sql` has a `_value` column only the values would be inserted in the arr
 
 ### Split output
 
-Produces multiple files instead of one. To enable, the [target](#target.json) has to have `split` param set.
+Produces multiple files instead of one. To enable, the [target](#target) has to have `split` param set.
 When configured, the output argument set with `-o` flag has to be a directory without extension.
 Currently supports only split by `date`. Every output file would contain records for each day returned from the extract query. Use `layout` param for MySQL or when the date column is stored as STRING.
 
@@ -119,11 +119,11 @@ The following examples assume there is a target named `sales` with two parameter
 
 ## Configuration
 
-This section describes the `bigboy.json` file format.
+This section describes the `bigboy.json` (default, unless `-c` flag is used) file format.
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `connections` | [connection](#connection)[] | + | Array of connection configurations for each database source |
+| `connections` | [connection](#connections)[] | + | Array of connection configurations for each database source |
 | `errors` | INTEGER | - | Total number of errors to ignore before aborting |
 | `nulls` | BOOLEAN | - | If nulls are allowed to be included in the output |
 | `page` | INTEGER | - | Number of rows per page |
@@ -145,9 +145,9 @@ This section describes the `bigboy.json` file format.
 | `max` | INTEGER | - | Maximum number of open database connections |
 | `timezone` | STRING | - | Can be `UTC` or `Local` or IANA Time Zone database format (For example `America/Los_Angeles`) |
 
-## target.json
+## target
 
-This section describes the `target.json` (default) file format.
+This section describes the `target.json` file format.
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -155,7 +155,7 @@ This section describes the `target.json` (default) file format.
 | `fetch` | STRING | - | File name for the main extract SQL query. Default `extract.sql` |
 | `params` | | [param](#param) | Allows to pass params into a query. For example to filter the data |
 | `prefetch` | BOOLEAN | - | If `prefetch.sql` should be used for parallel extraction |
-| `nest` | [nest](#nest)[] | Array of columns to be added for each record |
+| `nest` | [nest](#nest)[] | - | Array of columns to be added for each record |
 | `script` | STRING | - | *Not yet implemented* |
 | `split` | [split](#split) | - | Produces multiple files instead of one |
 | `timezone` | STRING | - | Defaults to connection timezone |
