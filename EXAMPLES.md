@@ -2,7 +2,15 @@
 
 How to use **bigboy**
 
-## Project Structure
+## Table of Contents
+- [Project Structure](#project-structure)
+- [Basic](#basic)
+- [Nest](#nest)
+- [Params](#params)
+- [Prefetch](#prefetch)
+- [Split](#split)
+
+### Project Structure
 
 ```
 ├── bigboy

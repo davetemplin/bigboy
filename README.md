@@ -8,6 +8,34 @@ High data-rate SQL-to-JSON extraction from SQL Server, PostgreSQL, or MySQL.
 Written by Dave Templin
 Maintained by Igor Starostenko
 
+## Table of Contents
+- [Overview](#overview)
+  - [Features](#features)
+  - [Quickstart](#quickstart)
+- [Concepts](#concepts)
+  - [Connections](#connections)
+  - [Targets](#targets)
+  - [Prefetching](#prefetching)
+  - [Parameterization](#parameterization)
+  - [Transforms](#transforms)
+    - [Nesting](#nesting)
+    - [Scripting](#scripting)
+    - [Split Output](#split-output)
+    - [Timezones](#timezones)
+- [Reference](#reference)
+  - [Configuration](#configuration)
+    - [connections](#connection)
+  - [Target](#target)
+    - [nest](#nest)
+    - [params](#params)
+    - [split](#split)
+- [Development](#development)
+  - [Build](#build)
+  - [Test](#test)
+  - [Cross compile](#cross-compile)
+  - [Release](#release)
+- [Helpful links](#helpful-links)
+
 # Overview
 
 Bigboy is basically a **SQL-TO-JSON** tool that extracts data from SQL Server, PostgreSQL, or MySQL databases.
@@ -113,7 +141,7 @@ The following examples assume there is a target named `sales` with two parameter
 
 # Reference
 
-## Command Arguments
+## Command Line Arguments
 
 * `-c` Bigboy config file path *(default=\"bigboy.json\")*
 * `-e` Maximum overall number of errors before aborting *(default=100)*
@@ -133,7 +161,7 @@ This section describes the `bigboy.json` (default, unless `-c` flag is used) fil
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| `connections` | [connection](#connections)[] | + | Array of connection configurations for each database source |
+| `connections` | [connection](#connection)[] | + | Array of connection configurations for each database source |
 | `errors` | INTEGER | - | Total number of errors to ignore before aborting |
 | `nulls` | BOOLEAN | - | If nulls are allowed to be included in the output |
 | `page` | INTEGER | - | Number of rows per page |
@@ -141,7 +169,7 @@ This section describes the `bigboy.json` (default, unless `-c` flag is used) fil
 | `retries` | INTEGER | - | Number of retries to perform in case of an error |
 | `workers` | INTEGER | - | Number of workers to run extracts in parallel |
 
-### connections
+### connection
 
 | Name | Type | Required | Description |
 | --- | --- | --- | --- |
