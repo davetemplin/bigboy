@@ -57,9 +57,13 @@ A directory path that contains required files (instructions) on how to extract d
 To extract data on large datasets it's recommended to utilize the prefetch feature that allows to split extract in multiple parallel processes. When [target](#target) has `prefetch` set to `true`, the `prefetch.sql` has to be provided that has an SQL query with a `SELECT` statement with one integer column.
 The results of the prefetch query would be be passed into multiple processes each execute an `extract.sql` with a subset of the prefetched numbers. The extract query needs to apply string interpolation (For example `WHERE id IN (%s)`)
 
+[See prefetch example](/EXAMPLES.md#prefetch)
+
 ## Parameterization
 
 Queries can accept parameters to customize the request from outside the target on runtime. Params can be configured in [target](#target) with a given type and default value. On runtime the params are passed into a `prefetch.sql` or an `extract.sql` using syntax like `WHERE date >= ?1`, where `1` is the index of the param (starting from `1`).
+
+[See params example](/EXAMPLES.md#params)
 
 ## Transforms
 
@@ -68,6 +72,8 @@ Queries can accept parameters to customize the request from outside the target o
 Allows for the output JSON records to have nested arrays. To enable, the [target](#target) has to have `nest` params configured and `nest.sql` defined.
 The nest query runs before the main extract and then inserts the results in an array format into a column defined in target `childKey` param. For records to be inserted into the result of the main extract query, the `nest.sql` needs to have a column with the name `_parent` which value would match the value of the column in the `extract.sql` which name is defined in target `parentKey` param.
 If `nest.sql` has a `_value` column only the values would be inserted in the array. Otherwise the entire record object (except the `_parent` column) would be added inside the array.
+
+[See nest example](/EXAMPLES.md#nest)
 
 ### Scripting
 
@@ -78,6 +84,8 @@ If `nest.sql` has a `_value` column only the values would be inserted in the arr
 Produces multiple files instead of one. To enable, the [target](#target) has to have `split` param set.
 When configured, the output argument set with `-o` flag has to be a directory without extension.
 Currently supports only split by `date`. Every output file would contain records for each day returned from the extract query. Use `layout` param for MySQL or when the date column is stored as STRING.
+
+[See split example](/EXAMPLES.md#split)
 
 ### Timezone format
 
