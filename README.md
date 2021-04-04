@@ -35,6 +35,8 @@ It also exposes a simple and minimal command-line interface (CLI) that works gre
 * Extract the data from the target: `./bigboy ${target}` (You may need to change access permissions to the executable by running `chmod +x bigboy`)
 * The data is extracted in a JSONL (newline delimited JSON) format in `out/${target}/` directory (by default) with current date filename
 
+[See basic example](/EXAMPLES.md#basic)
+
 # Concepts
 
 ## Connections
