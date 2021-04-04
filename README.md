@@ -163,7 +163,7 @@ This section describes the `target.json` file format.
 | --- | --- | --- | --- |
 | `connection` | STRING | + | Connection name |
 | `fetch` | STRING | - | File name for the main extract SQL query. Default `extract.sql` |
-| `params` | - | [param](#param) | Allows to pass params into a query. For example to filter the data |
+| `params` | [param](#param) | - | Allows to pass params into a query. For example to filter the data |
 | `prefetch` | BOOLEAN | - | If `prefetch.sql` should be used for parallel extraction |
 | `nest` | [nest](#nest)[] | - | Array of columns to be added for each record |
 | `script` | STRING | - | *Not yet implemented* |
