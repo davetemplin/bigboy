@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 	"sync"
 	"time"
 )
@@ -59,7 +60,11 @@ func writeSplit(target *Target, transformChannel <-chan []map[string]interface{}
 	if args.out == "" {
 		dir = path.Join(defaultOutputDir, args.target)
 	} else {
-		dir = path.Join(path.Dir(args.out), args.target)
+		dir = path.Join(args.out, args.target)
+	}
+
+	if !strings.HasSuffix(dir, "/") {
+		dir = fmt.Sprintf("%s/", dir)
 	}
 
 	err := os.MkdirAll(path.Dir(dir), 0777)

@@ -1,7 +1,7 @@
 on: [push]
-name: build
+name: test
 jobs:
-  build:
+  test:
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
@@ -36,11 +36,5 @@ jobs:
           key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go${{ matrix.go-version }}-
-      - name: Get dependencies
-        run: |
-          bash install.sh
-          go mod init bigboy
       - name: Test
         run: go test -v .
-      - name: Build
-        run: go build -v .

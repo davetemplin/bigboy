@@ -20,5 +20,5 @@ func transform(target *Target, extractChannel <-chan []map[string]interface{}, t
 		}()
 	}
 	wg.Wait()
-	close(transformChannel)	
+	close(transformChannel)
 }

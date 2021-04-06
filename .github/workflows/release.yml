@@ -1,0 +1,74 @@
+on:
+  push:
+    tags:
+      - 'v*'
+name: release
+jobs:
+  release:
+    env:
+      GOVERSION: 1.14
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go ${{ env.GOVERSION }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GOVERSION }}
+        id: go
+      - name: Checkout code into the Go module directory
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            %LocalAppData%\go-build
+          key: ${{ runner.os }}-go${{ env.GOVERSION }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: go build -v .
+      - name: version
+        run: echo "::set-output name=version::$(./bigboy -v)"
+        id: version
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: build artifacts
+        run: bash build.sh
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/bigboy-linux-amd64.tar.gz
+          asset_name: bigboy-linux-amd64.tar.gz
+          asset_content_type: application/gzip
+      - name: upload darwin artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/bigboy-darwin-amd64.tar.gz
+          asset_name: bigboy-darwin-amd64.tar.gz
+          asset_content_type: application/gzip
+      - name: upload windows artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/bigboy-windows-amd64.zip
+          asset_name: bigboy-windows-amd64.zip
+          asset_content_type: application/zip

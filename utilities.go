@@ -70,8 +70,33 @@ func toUint64(value interface{}) uint64 {
 		return uint64(value.(uint32))
 	case uint64:
 		return uint64(value.(uint64))
+	case string:
+		number, err := strconv.ParseInt(value.(string), 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		return uint64(number)
 	default:
 		panic("cannot convert value to uint64")
+	}
+}
+
+func toTime(value interface{}, layout string) time.Time {
+	switch value.(type) {
+	case time.Time:
+		return value.(time.Time)
+	case string:
+		if layout == "" {
+			panic("string to time requires layout")
+		}
+
+		t, err := time.Parse(layout, value.(string))
+		if err != nil {
+			panic(err)
+		}
+		return t
+	default:
+		panic("cannot convert value to time.Time")
 	}
 }
 

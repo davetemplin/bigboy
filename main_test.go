@@ -1,79 +1,162 @@
 package main
 
 import (
-	"strings"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
 	"testing"
+	"time"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 )
 
-func getDefaultBool(priorityBool bool, fallbackBool bool) bool {
-	if !priorityBool {
-		return fallbackBool
+func CreateFile(path string, json string) {
+	f, err := os.Create(path)
+	if err != nil {
+		panic(err)
 	}
-	return priorityBool
+	_, err = f.WriteString(json)
+	if err != nil {
+		panic(err)
+	}
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
 }
 
-func getDefaultInt(priorityInt int, fallbackInt int) int {
-	if priorityInt == 0 {
-		return fallbackInt
+func TestRun(t *testing.T) {
+	args = Args{out: "test_main.json", page: 10, workers: 1, target: "test"}
+	os.Remove(args.out)
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	return priorityInt
+	defer db.Close()
+
+	conn := &Connection{
+		Driver:   "mysql",
+		Server:   "tcp(mysql-test.ac.uk:4496)",
+		Database: "test",
+		// Dsn: "",
+		Port:     4496,
+		User:     "TESTER",
+		Password: "PASS",
+		Timezone: "UTC",
+		Max:      1,
+		db:       db,
+		// location: *time.Location,
+	}
+
+	target := &Target{
+		Connection: "conn",
+		Fetch:      "",
+		Params:     []Param(nil),
+		Prefetch:   false,
+		Nest:       []*Nest(nil),
+		Script:     "",
+		Split:      (*Split)(nil),
+		Timezone:   "UTC",
+		connection: conn,
+		extract:    "SELECT name, date FROM testTable",
+		prefetch:   "",
+		params:     []interface{}(nil),
+		location:   (*time.Location)(nil),
+	}
+
+	type TestQuery struct {
+		One string `json:"One"`
+		Two int32  `json:"Two"`
+	}
+	var expectedOutput = TestQuery{
+		One: "ValueOne",
+		Two: 2,
+	}
+	var testOut TestQuery
+
+	mock.ExpectQuery(target.extract).WillReturnRows(mock.NewRows([]string{"One", "Two"}).AddRow(expectedOutput.One, expectedOutput.Two))
+
+	run(target)
+	disconnect()
+
+	data, err := ioutil.ReadFile(args.out)
+	assert.Equal(t, nil, err, "Can read from output file")
+	err = json.Unmarshal(data, &testOut)
+	assert.Equal(t, nil, err, "Can read output json")
+	assert.Equal(t, expectedOutput, testOut, "Output matches input")
+	os.Remove(args.out)
 }
 
-func getDefaultUint64(priorityInt uint64, fallbackInt uint64) uint64 {
-	if priorityInt == 0 {
-		return fallbackInt
+func TestRunPrefetch(t *testing.T) {
+	args = Args{out: "test_main.json", page: 10, workers: 1, target: "test", errors: 3}
+	os.Remove(args.out)
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	return priorityInt
-}
+	defer db.Close()
 
-func TestParseFlags(t *testing.T) {
-	var tests = []struct {
-		input  []string
-		flags  Flags
-		config Config
-	}{
-		{[]string{},
-			Flags{},
-			Config{}},
-
-		{[]string{},
-			Flags{},
-			Config{Errors: 555, Nulls: true, Quiet: true, Retries: 11, Workers: 12}},
-
-		{[]string{"-c", "config.json", "-e", "1000", "-n", "-o", "testOut.json", "-p", "100", "-q", "-r", "7", "-v", "-w", "9"},
-			Flags{config: "config.json", Args: Args{errors: 1000, nulls: true, out: "testOut.json", page: 100, quiet: true, retries: 7, workers: 9}, version: true},
-			Config{}},
+	conn := &Connection{
+		Driver:   "mysql",
+		Server:   "tcp(mysql-test.ac.uk:4496)",
+		Database: "test",
+		// Dsn: "",
+		Port:     4496,
+		User:     "TESTER",
+		Password: "PASS",
+		Timezone: "UTC",
+		Max:      1,
+		db:       db,
+		// location: *time.Location,
 	}
 
-	for _, tt := range tests {
-		t.Run(strings.Join(tt.input, " "), func(t *testing.T) {
-			flags, _ := parseFlags("bigboy", tt.input, &tt.config)
-
-			var expectedConfig string = defaultConfig
-			if tt.flags.config != "" {
-				expectedConfig = tt.flags.config
-			}
-			expectedErrors := getDefaultUint64(tt.flags.errors, tt.config.Errors)
-			expectedNulls := getDefaultBool(tt.flags.nulls, tt.config.Nulls)
-			expectedPage := getDefaultInt(tt.flags.page, tt.config.Page)
-			expectedQuiet := getDefaultBool(tt.flags.quiet, tt.config.Quiet)
-			expectedRetries := getDefaultUint64(tt.flags.retries, tt.config.Retries)
-			expectedWorkers := getDefaultInt(tt.flags.workers, tt.config.Workers)
-
-			assert.Equal(t, expectedConfig, flags.config, "Args config set")
-			assert.Equal(t, expectedErrors, flags.errors, "Args errors set")
-			assert.Equal(t, expectedNulls, flags.nulls, "Args nulls set")
-			assert.Equal(t, tt.flags.out, flags.out, "Args out set")
-			assert.Equal(t, expectedPage, flags.page, "Args page set")
-			assert.Equal(t, tt.flags.params, flags.params, "Args params set")
-			assert.Equal(t, expectedQuiet, flags.quiet, "Args quiet set")
-			assert.Equal(t, expectedRetries, flags.retries, "Args retries set")
-			assert.Equal(t, tt.flags.target, flags.target, "Args target set")
-			assert.Equal(t, tt.flags.version, flags.version, "Args version set")
-			assert.Equal(t, expectedWorkers, flags.workers, "Args workers set")
-		})
+	target := &Target{
+		Connection: "conn",
+		Fetch:      "",
+		Params:     []Param(nil),
+		Prefetch:   true,
+		Nest:       []*Nest(nil),
+		Script:     "",
+		Split:      (*Split)(nil),
+		Timezone:   "UTC",
+		connection: conn,
+		extract:    "SELECT id, name FROM testTable WHERE id IN (%s)",
+		prefetch:   "SELECT id FROM testTable WHERE date >= \"2021-03-24\"",
+		params:     []interface{}(nil),
+		location:   (*time.Location)(nil),
 	}
 
+	type TestQuery struct {
+		One string `json:"One"`
+		Two int32  `json:"Two"`
+	}
+	expectedOutput := []TestQuery{{One: "row1", Two: 12}, {One: "row2", Two: 34}}
+	prefetchOutput := []uint64{12, 34}
+	var testOut []TestQuery
+
+	expectedQuery := fmt.Sprintf(target.extract, "?")
+	mock.ExpectQuery(target.prefetch).WillReturnRows(mock.NewRows([]string{"Id"}).AddRow(prefetchOutput[0]).AddRow(prefetchOutput[1]))
+	mock.ExpectQuery(expectedQuery).WillReturnRows(mock.NewRows([]string{"One", "Two"}).AddRow(expectedOutput[0].One, expectedOutput[0].Two).AddRow(expectedOutput[1].One, expectedOutput[1].Two))
+
+	run(target)
+	disconnect()
+
+	data, err := ioutil.ReadFile(args.out)
+	assert.Equal(t, nil, err, "Can read from output file")
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	for decoder.More() {
+		var testQuery TestQuery
+		err = decoder.Decode(&testQuery)
+		assert.Equal(t, nil, err, "Can read output json")
+		testOut = append(testOut, testQuery)
+	}
+
+	assert.Equal(t, expectedOutput, testOut, "Output matches input")
+	os.Remove(args.out)
 }

@@ -8,28 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func CreateConfig(path string, json string) {
-	f, err := os.Create(path)
-	if err != nil {
-		panic(err)
-	}
-	_, err = f.WriteString(json)
-	if err != nil {
-		panic(err)
-	}
-	err = f.Close()
-	if err != nil {
-		panic(err)
-	}
-}
-
-func DeleteConfig(path string) {
-	err := os.Remove(path)
-	if err != nil {
-		panic(err)
-	}
-}
-
 func TestLoadConfigMissing(t *testing.T) {
 	configPath := "test_config.json"
 	config := loadConfig(configPath)
@@ -45,7 +23,7 @@ func TestLoadConfigMissing(t *testing.T) {
 
 func TestLoadConfigEmpty(t *testing.T) {
 	configPath := "test_config.json"
-	CreateConfig(configPath, "{}")
+	CreateFile(configPath, "{}")
 
 	config := loadConfig(configPath)
 
@@ -57,7 +35,7 @@ func TestLoadConfigEmpty(t *testing.T) {
 	assert.Equal(t, toUint64(defaultRetries), config.Retries, "Config Retries set")
 	assert.Equal(t, defaultWorkers, config.Workers, "Config Workers set")
 
-	DeleteConfig(configPath)
+	os.Remove(configPath)
 }
 
 func TestLoadConfigOverride(t *testing.T) {
@@ -73,7 +51,7 @@ func TestLoadConfigOverride(t *testing.T) {
 	json, err := json.Marshal(testConfig)
 	assert.Equal(t, err, nil, "JSON config created")
 
-	CreateConfig(configPath, string(json))
+	CreateFile(configPath, string(json))
 
 	config := loadConfig(configPath)
 
@@ -85,5 +63,5 @@ func TestLoadConfigOverride(t *testing.T) {
 	assert.Equal(t, (*testConfig).Retries, config.Retries, "Config Retries set")
 	assert.Equal(t, (*testConfig).Workers, config.Workers, "Config Workers set")
 
-	DeleteConfig(configPath)
+	os.Remove(configPath)
 }

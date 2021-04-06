@@ -48,8 +48,9 @@ type Param struct {
 
 // Split ...
 type Split struct {
-	By    string `json:"by"`
-	Value string `json:"value"`
+	By     string `json:"by"`
+	Layout string `json:"layout"`
+	Value  string `json:"value"`
 }
 
 func loadTarget() *Target {
@@ -72,7 +73,6 @@ func resolveTarget(target *Target) {
 	resolveTargetParams(target)
 	resolveTargetNest(target)
 	resolveTargetPrefetch(target)
-	validateTarget(target)
 }
 
 func paramName(param Param, i int) string {

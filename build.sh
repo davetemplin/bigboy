@@ -3,32 +3,38 @@ trap "exit" ERR
 
 OS=$1
 
-build_mac () {
+build_darwin () {
   GOOS=darwin 
   GOARCH=amd64
-  go build -o bin/mac/bigboy
+  name=bigboy-${GOOS}-${GOARCH}
+  GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$name
+  tar -czvf bin/$name.tar.gz bin/$name
 }
 
 build_linux () {
   GOOS=linux 
   GOARCH=amd64
-  go build -o bin/linux/bigboy
+  name=bigboy-${GOOS}-${GOARCH}
+  GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$name
+  tar -czvf bin/$name.tar.gz bin/$name
 }
 
 build_windows() {
   GOOS=windows 
   GOARCH=amd64
-  go build -o bin/windows/bigboy.exe
+  name=bigboy-${GOOS}-${GOARCH}
+  GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$name.exe
+  zip bin/$name bin/$name.exe
 }
 
 if [[ -z $OS ]]; then
-  build_mac
+  build_darwin
   build_linux
   build_windows
 else 
   case $OS in
-    mac)
-      build_mac
+    darwin)
+      build_darwin
       ;;
     linux)
       build_linux
@@ -37,7 +43,7 @@ else
       build_windows
       ;;
     *)
-      echo 'Invalid OS name. Has to be one of mac|linux|windows'
+      echo 'Invalid OS name. Has to be one of darwin|linux|windows'
       exit 1
       ;;
   esac

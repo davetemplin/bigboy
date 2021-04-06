@@ -5,23 +5,24 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
 	_ "github.com/denisenkom/go-mssqldb"
-	_ "github.com/lib/pq"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 // Connection ...
 type Connection struct {
-	Driver          string  `json:"driver"`
-	Server          string  `json:"server"`
-	Database        string  `json:"database"`
-	Dsn             string  `json:"dsn"`
-	Port            int     `json:"port"`
-	User            string  `json:"user"`
-	Password        string  `json:"password"`
-	Timezone        string  `json:"timezone"`
-	Max             int     `json:"max"`
-	db *sql.DB
+	Driver   string `json:"driver"`
+	Server   string `json:"server"`
+	Database string `json:"database"`
+	Dsn      string `json:"dsn"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	Timezone string `json:"timezone"`
+	Max      int    `json:"max"`
+	db       *sql.DB
 	location *time.Location
 }
 
@@ -74,7 +75,7 @@ func formatDsn(connection *Connection) string {
 	if connection.Dsn != "" && !strings.HasPrefix(connection.Dsn, "...") {
 		return connection.Dsn
 	}
-		
+
 	var dsn string
 	if connection.Driver == "mssql" {
 		dsn = fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d",
